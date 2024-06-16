@@ -33,6 +33,7 @@ class DataMovement {
     this.ingressType,
     this.amount,
     this.details,
+    required this.isExpanded,
   });
 
   /// [fromJson] is a factory method that converts a json object to a [DataMovement]
@@ -47,6 +48,7 @@ class DataMovement {
       type: json['type'] != null ? json['type'].toString() : '',
       amount: json['amount'] != null ? Decimal.parse(json['amount'].toString()).toStringAsFixed(2) : '0.00',
       details: json['details'] != null ? DetailsMovement.fromJson(json['details'] as Map<String, dynamic>) : DetailsMovement(),
+      isExpanded: false,
     );
   }
 
@@ -76,6 +78,9 @@ class DataMovement {
 
   /// [details] is a DetailsMovement
   DetailsMovement? details;
+
+  /// [isExpanded] is a boolean
+  bool isExpanded = false;
 }
 
 /// [DetailsMovement] is a class that contains the response of the movements
