@@ -54,5 +54,8 @@ export 'package:pagando_service/src/repository/pagando/send_repo.dart';
 export 'package:pagando_service/src/repository/pagando/splash_repo.dart';
 export 'package:pagando_service/src/repository/pagando/nav_repo.dart';
 
+export 'package:pagando_service/src/repository/checkout/links_repo.dart';
+export 'package:pagando_service/src/repository/checkout/products_repo.dart';
+
 export 'package:pagando_service/src/constants.dart';
 export 'package:pagando_service/src/rest_service.dart';
