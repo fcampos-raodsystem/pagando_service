@@ -1,4 +1,4 @@
-import 'package:pagando_service/src/model/body/user.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 class UserSessionModel {
   UserSessionModel({required this.message, required this.data});

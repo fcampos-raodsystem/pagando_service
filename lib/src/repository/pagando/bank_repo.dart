@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// {@template bank_repo}
 /// Repository for bank
@@ -11,13 +9,10 @@ class BankRepo {
   /// {@macro bank_repo}
   /// {@macro api_client}
   /// {@macro shared_preferences}
-  BankRepo({required this.apiClient, required this.store});
+  BankRepo({required this.apiClient});
   
   /// {@macro bank_repo}
   final RestService apiClient;
-  
-  /// {@macro bank_repo}
-  final SharedPreferences store;
 
   /// Get payment methods
   Future<Response<dynamic>> getPaymentMethods()  {

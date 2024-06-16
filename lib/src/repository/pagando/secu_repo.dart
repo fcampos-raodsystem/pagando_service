@@ -1,18 +1,13 @@
 import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// SecuRepo Classs
 class SecuRepo {
   /// Constructor con parámetros requeridos
-  SecuRepo({required this.apiClient, required this.store});
+  SecuRepo({required this.apiClient});
 
   /// Dependencia de RestService
   final RestService apiClient;
-
-  /// Dependencia de SharedPreferences
-  final SharedPreferences store;
 
   /// Método que obtiene la lista de imágenes de seguridad
   Future<Response<dynamic>> getSecurityImages() async {

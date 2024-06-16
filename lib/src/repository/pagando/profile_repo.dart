@@ -1,19 +1,14 @@
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// This file contains the repository class for profile
 class ProfileRepo {
   /// Constructor con parámetros requeridos
-  ProfileRepo({required this.apiClient, required this.store});
+  ProfileRepo({required this.apiClient});
 
   /// Dependencia de RestService
   final RestService apiClient;
-
-  /// Dependencia de SharedPreferences
-  final SharedPreferences store;
 
   /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
@@ -126,7 +121,6 @@ class ProfileRepo {
   }
 
   Future<Response> changeDni({String? prefix, String? dni}) async {
-
     if (prefix == null) {
       return apiClient.patchData(
         Constants.persons,

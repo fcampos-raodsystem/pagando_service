@@ -1,5 +1,4 @@
-import 'package:pagando_service/src/model/body/dni_type.dart';
-import 'package:pagando_service/src/model/body/language.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 /// ConfigModel
 class ConfigModel {

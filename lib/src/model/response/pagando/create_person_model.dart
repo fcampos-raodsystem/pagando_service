@@ -1,4 +1,4 @@
-import 'package:pagando_service/src/model/body/dni_type.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 /// CreatePerson Model
 class CreatePersonModel {

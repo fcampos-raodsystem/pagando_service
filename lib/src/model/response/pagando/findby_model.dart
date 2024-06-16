@@ -1,4 +1,4 @@
-import 'package:pagando_service/src/model/body/person.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 /// FindByModel class
 class FindByModel {

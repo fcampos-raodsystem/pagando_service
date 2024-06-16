@@ -1,18 +1,13 @@
 import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// This file contains the repository class for notifications
 class NotiRepo {
   /// Constructor with required parameters
-  NotiRepo({required this.apiClient, required this.store});
+  NotiRepo({required this.apiClient});
 
   /// Dependency of RestService
   final RestService apiClient;
-
-  /// Dependency of SharedPreferences
-  final SharedPreferences store;
 
   /// Method to get all notifications
   Future<Response<dynamic>> getNotifications() {

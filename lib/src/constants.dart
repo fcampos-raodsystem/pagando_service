@@ -83,11 +83,17 @@ class Constants {
   /// NOTIFICATIONS
   static const String notifications = '/notifications';
 
-  // DIRECTORIES
+  /// DIRECTORIES
   static const String directories = '/directories';
-  // /// JWT
-  // static const String jwt = 'pagando_jwt';
-  //
-  // /// JWT Refresh
-  // static const String jwtRefresh = 'pagando_jwt_refresh';
+
+
+
+  /// CHECKOUT PAGANDO ROUTES
+  /// LINKS
+  static const String links = '/links';
+
+  /// PRODUCTS
+  static const String products = '/products';
+
+
 }

@@ -1,4 +1,4 @@
-import 'package:pagando_service/src/model/body/dni_type.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 /// Clase modelo para la entidad Person
 class Person {

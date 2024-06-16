@@ -1,8 +1,4 @@
-import 'package:pagando_service/src/model/body/balance.dart';
-import 'package:pagando_service/src/model/body/person.dart';
-import 'package:pagando_service/src/model/body/profile.dart';
-import 'package:pagando_service/src/model/body/secure_config.dart';
-import 'package:pagando_service/src/model/body/session.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 /// MeModel is a model class that contains the data of the user.
 class MeModel {

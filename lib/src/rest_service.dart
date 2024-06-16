@@ -6,14 +6,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:retry/retry.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class RestService extends GetConnect implements GetxService {
   RestService({
     required this.appBaseUrl,
     required this.appBaseDevUrl,
     required this.isDev,
-    required this.store,
     this.token,
   }) {
     token = token;
@@ -24,7 +22,6 @@ class RestService extends GetConnect implements GetxService {
   final bool isDev;
   final String appBaseDevUrl;
   final String appBaseUrl;
-  final SharedPreferences store;
   static const String noInternetMessage = 'Network connection failed. Please try again.';
   final int timeoutInSeconds = 30;
   final int maxRetry = 2;

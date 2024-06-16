@@ -1,18 +1,13 @@
 import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// Clase que contiene los métodos para enviar y recibir dinero
 class SendRepo {
   /// Constructor con parámetros requeridos
-  SendRepo({required this.apiClient, required this.store});
+  SendRepo({required this.apiClient});
 
   /// Constructor de la clase
   final RestService apiClient;
-
-  /// Constructor de la clase
-  final SharedPreferences store;
 
   /// Método para obtener el usuario actual
   Future<Response<dynamic>> findByPin({required String pin}) {

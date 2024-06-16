@@ -1,5 +1,5 @@
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/model/body/secure_image.dart';
+import 'package:pagando_service/src/model/body/pagando/secure_image.dart';
 
 /// UserModel class
 class UserModel {

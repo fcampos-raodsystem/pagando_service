@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:pagando_service/src/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 /// {{@template auth_repo}}
 /// Repository for authentication
@@ -9,13 +7,10 @@ class AuthRepo {
   /// Constructor
   /// [apiClient] API client
   /// [sharedPreferences] Shared preferences
-  AuthRepo({required this.apiClient, required this.store});
+  AuthRepo({required this.apiClient});
 
   /// API client
   final RestService apiClient;
-
-  /// Shared preferences
-  final SharedPreferences store;
 
   /// {{@template getDniTypes}}
   /// Get DNI types
