@@ -34,7 +34,7 @@ class ProductData {
       title: json['title'].toString(),
       description: json['description'].toString(),
       price: json['price'].toString(),
-      image: Image.fromJson(json['image']),
+      image: Imagen.fromJson(json['image']),
       id: json['_id'].toString(),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -45,7 +45,7 @@ class ProductData {
   final String title;
   final String description;
   final String price;
-  final Image image;
+  final Imagen image;
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;

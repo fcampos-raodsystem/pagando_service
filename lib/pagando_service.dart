@@ -12,7 +12,7 @@ export 'package:pagando_service/src/model/body/pagando/secure_config.dart';
 export 'package:pagando_service/src/model/body/pagando/session.dart';
 export 'package:pagando_service/src/model/body/pagando/user.dart';
 export 'package:pagando_service/src/model/body/pagando/tokens.dart';
-export 'package:pagando_service/src/model/body/checkout/image.dart';
+export 'package:pagando_service/src/model/body/checkout/imagen.dart';
 export 'package:pagando_service/src/model/body/checkout/product.dart';
 
 export 'package:pagando_service/src/model/response/pagando/auth_login_model.dart';
