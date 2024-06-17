@@ -66,6 +66,10 @@ class RestService extends GetConnect implements GetxService {
     Map<String, String>? headers,
   }) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+      }
+
       bool hasInternet = await hasInternetConnection();
       if (!hasInternet) {
         return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -89,6 +93,10 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers, int? timeout}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body');
+      }
       bool hasInternet = await hasInternetConnection();
 
       if (!hasInternet) {
@@ -119,6 +127,10 @@ class RestService extends GetConnect implements GetxService {
     Map<String, String>? headers,
   }) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body with ${multipartBody.length} picture');
+      }
       bool hasInternet = await hasInternetConnection();
 
       if (!hasInternet) {
@@ -151,6 +163,10 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body');
+      }
       bool hasInternet = await hasInternetConnection();
 
       if (!hasInternet) {
@@ -176,6 +192,10 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> patchData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body');
+      }
       bool hasInternet = await hasInternetConnection();
       if (!hasInternet) {
         return const Response(statusCode: 1, statusText: noInternetMessage);
@@ -200,6 +220,9 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+      }
       bool hasInternet = await hasInternetConnection();
 
       if (!hasInternet) {
@@ -228,6 +251,11 @@ class RestService extends GetConnect implements GetxService {
       try {
         body = jsonDecode(response.bodyString!);
       } catch (_) {}
+    }
+
+    if (kDebugMode) {
+      print('====> API Response: [${response.statusCode}] ${response.request?.url.toString()}');
+      print('${response.bodyString}');
     }
 
     if (response.statusCode != null && (response.statusCode! < 200 || response.statusCode! > 299)) {
