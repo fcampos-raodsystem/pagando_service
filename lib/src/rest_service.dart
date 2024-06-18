@@ -204,7 +204,7 @@ class RestService extends GetConnect implements GetxService {
     return response;
   }
 
-  void CancelRequest() {
+  void cancelRequest() {
     payingHttpClient.close();
     payingHttpClient = GetHttpClient(
         userAgent: userAgent,
