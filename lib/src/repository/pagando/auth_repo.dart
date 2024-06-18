@@ -3,14 +3,11 @@ import 'package:pagando_service/pagando_service.dart';
 
 /// {{@template auth_repo}}
 /// Repository for authentication
-class AuthRepo {
+class AuthRepo extends RestService{
   /// Constructor
   /// [apiClient] API client
   /// [sharedPreferences] Shared preferences
-  AuthRepo({required this.apiClient});
-
-  /// API client
-  final RestService apiClient;
+  AuthRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   /// {{@template getDniTypes}}
   /// Get DNI types
@@ -21,7 +18,7 @@ class AuthRepo {
   /// [Response] response
   /// {{@endtemplate}}
   Future<Response<dynamic>> getCIData(String dniType, String dni) {
-    return apiClient.postData(
+    return postData(
       Constants.persons,
       {'dni': dni, 'dniTypePrefix': dniType},
     );
@@ -40,7 +37,7 @@ class AuthRepo {
     required String dni,
     required String dniType,
   }) {
-    return apiClient.postData(Constants.persons, {
+    return postData(Constants.persons, {
       'firstName': first,
       'secondName': seconds,
       'dni': dni,
@@ -55,7 +52,7 @@ class AuthRepo {
     required String phoneOrEmail,
     required String idPerson,
   }) {
-    return apiClient.postData(Constants.newUser, {
+    return postData(Constants.newUser, {
       'phoneOrEmail': phoneOrEmail,
       'personId': idPerson,
     });
@@ -66,7 +63,7 @@ class AuthRepo {
   /// [phoneOrEmail] Phone or email
   /// {{@endtemplate}}
   Future<Response<dynamic>> sendOTP({required String phoneOrEmail}) {
-    return apiClient.postData(Constants.sendOtp, {
+    return postData(Constants.sendOtp, {
       'phoneOrEmail': phoneOrEmail,
     });
   }
@@ -78,7 +75,7 @@ class AuthRepo {
     required String otp,
     required String phoneOrEmail,
   }) {
-    return apiClient.getData(
+    return getData(
       '${Constants.verifyOtp}?code=$otp&phoneOrEmail=$phoneOrEmail',
     );
   }
@@ -88,7 +85,7 @@ class AuthRepo {
   /// [phoneOrEmail] Phone or email
   /// {{@endtemplate}}
   Future<Response<dynamic>> findUser({required String phoneOrEmail}) {
-    return apiClient.getData(
+    return getData(
       '${Constants.findUser}?phoneOrEmail=$phoneOrEmail',
     );
   }
@@ -117,7 +114,7 @@ class AuthRepo {
     required String lat,
   }) {
     if (password != null) {
-      return apiClient.postData(Constants.authLogin, {
+      return postData(Constants.authLogin, {
         'phoneOrEmail': phoneOrEmail,
         'password': password,
         'userSession': {
@@ -130,7 +127,7 @@ class AuthRepo {
         },
       });
     }
-    return apiClient.postData(Constants.authLogin, {
+    return postData(Constants.authLogin, {
       'phoneOrEmail': phoneOrEmail,
       'otpCode': otp,
       'userSession': {
@@ -148,16 +145,14 @@ class AuthRepo {
   /// Get me
   /// {{@endtemplate}}
   Future<Response> getMe() {
-    return apiClient.getData(Constants.me);
+    return getData(Constants.me);
   }
 
   /// {{@template saveUserToken}}
   /// Save user token
-  /// [token] Token
-  bool saveUserToken(String token) {
-    apiClient
-      ..token = token
-      ..updateHeader(token);
+  /// [t] Token
+  bool saveUserToken(String t) {
+    updateHeader(t);
     return true;
   }
 
@@ -166,7 +161,7 @@ class AuthRepo {
   /// [biometric] Biometric
   /// {{@endtemplate}}
   Future<Response> setBiometric({bool biometric = false}) {
-    return apiClient.patchData(Constants.setBiometric, {
+    return patchData(Constants.setBiometric, {
       'hasBiometric': biometric,
     });
   }
@@ -177,7 +172,7 @@ class AuthRepo {
   /// [refresh] Refresh token
   /// {{@endtemplate}}
   Future<Response> logout({String? jwt = '', String? refresh = ''}) {
-    return apiClient.postData(Constants.authLogout, {
+    return postData(Constants.authLogout, {
       'accessToken': jwt,
       'refreshToken': refresh,
     });
@@ -195,7 +190,7 @@ class AuthRepo {
       return Future.value(Response(body: json.toJson().toString()));
     }
 
-    return apiClient.postData(Constants.verifyToken, {
+    return postData(Constants.verifyToken, {
       'accessToken': jwt,
       'refreshToken': refresh,
     });
@@ -208,13 +203,13 @@ class AuthRepo {
       return Future.value(Response(body: json.toJson().toString()));
     }
 
-    return apiClient.postData(Constants.refreshToken, {
+    return postData(Constants.refreshToken, {
       'refreshToken': refreshToken,
     });
   }
 
   Future<Response> passwordVerify({required String password}) {
-    return apiClient.postData(Constants.passwordVerify, {
+    return postData(Constants.passwordVerify, {
       'password': password,
     });
   }

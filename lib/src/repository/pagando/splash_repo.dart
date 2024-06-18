@@ -2,25 +2,22 @@ import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
 /// [SplashRepo] class
-class SplashRepo {
+class SplashRepo extends RestService{
   /// [SplashRepo] constructor
-  SplashRepo({required this.apiClient});
-
-  /// [apiClient] instance of [RestService]
-  final RestService apiClient;
+  SplashRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   /// [getSplashData] method
   Future<Response<dynamic>> getConfigData() {
-    return apiClient.getData(Constants.splash);
+    return getData(Constants.splash);
   }
 
   /// [getDniTypes] method
   Future<Response<dynamic>> getDniTypes() {
-    return apiClient.getData(Constants.personsDniTypes);
+    return getData(Constants.personsDniTypes);
   }
 
   /// [getUserSessions] method
   Future<Response<dynamic>> getUserSessions({required String deviceToken}) {
-    return apiClient.getData('${Constants.userSessions}?fbt=$deviceToken');
+    return getData('${Constants.userSessions}?fbt=$deviceToken');
   }
 }

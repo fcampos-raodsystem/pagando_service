@@ -1,11 +1,9 @@
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:pagando_service/pagando_service.dart';
 import 'package:get/get.dart';
+import 'package:pagando_service/pagando_service.dart';
 
-class ProductsRepo {
-  ProductsRepo({required this.apiClient});
-
-  final RestService apiClient;
+class ProductsRepo extends RestService {
+  ProductsRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   Future<Response<dynamic>> createProduct({
     required XFile image,
@@ -17,7 +15,7 @@ class ProductsRepo {
     final multipartBody = <MultipartBody>[
       MultipartBody('image', image),
     ];
-    return apiClient.postMultipartData(
+    return postMultipartData(
       Constants.products,
       {
         'pagandoUserId': pagandoUserId,

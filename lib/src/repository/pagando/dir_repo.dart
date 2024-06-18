@@ -1,10 +1,7 @@
 import 'package:pagando_service/pagando_service.dart';
 
-class DirRepo {
+class DirRepo extends RestService{
   /// Constructor con parámetros requeridos
-  DirRepo({required this.apiClient});
-
-  /// Dependencia de RestService
-  final RestService apiClient;
+  DirRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
 }

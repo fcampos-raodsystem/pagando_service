@@ -3,40 +3,37 @@ import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
 /// This file contains the repository class for profile
-class ProfileRepo {
+class ProfileRepo extends RestService{
   /// Constructor con parámetros requeridos
-  ProfileRepo({required this.apiClient});
-
-  /// Dependencia de RestService
-  final RestService apiClient;
+  ProfileRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
-    return apiClient.postData(Constants.sendPhoneOtp, {'phone': phone});
+    return postData(Constants.sendPhoneOtp, {'phone': phone});
   }
 
   /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> changePhoneNumber(String phone, String otpCode) {
-    return apiClient.patchData(
+    return patchData(
       Constants.changePhone,
       {'newPhone': phone, 'otpCode': otpCode},
     );
   }
 
   Future<Response<dynamic>> getQuestions() {
-    return apiClient.getData(
+    return getData(
       Constants.questions,
     );
   }
 
   /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> sendOTPChangeEmail(String email) {
-    return apiClient.postData(Constants.sendEmailOtp, {'email': email});
+    return postData(Constants.sendEmailOtp, {'email': email});
   }
 
   /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> changeEmail(String email, String otpCode) {
-    return apiClient.patchData(
+    return patchData(
       Constants.changeEmail,
       {'newEmail': email, 'otpCode': otpCode},
     );
@@ -44,7 +41,7 @@ class ProfileRepo {
 
   /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> setSecurityQuestions(List<Map<String, String>> questions) {
-    return apiClient.patchData(
+    return patchData(
       Constants.questions,
       {'questions': questions},
     );
@@ -55,7 +52,7 @@ class ProfileRepo {
     String newPassword,
     String repeatNewPassword,
   ) {
-    return apiClient.patchData(
+    return patchData(
       Constants.changePassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
@@ -66,7 +63,7 @@ class ProfileRepo {
     String newPassword,
     String repeatNewPassword,
   ) {
-    return apiClient.patchData(
+    return patchData(
       Constants.changeTransactionPassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
@@ -77,7 +74,7 @@ class ProfileRepo {
     final multipartBody = <MultipartBody>[
       MultipartBody('file', file),
     ];
-    return apiClient.postMultipartData(
+    return postMultipartData(
       Constants.imageUpload,
       {},
       multipartBody,
@@ -85,7 +82,7 @@ class ProfileRepo {
   }
 
   Future<Response> changeNames({required String name}) async {
-    return apiClient.patchData(
+    return patchData(
       Constants.persons,
       {
         "firstName": name,
@@ -94,7 +91,7 @@ class ProfileRepo {
   }
 
   Future<Response> changeLastNames({required String lastName}) async {
-    return apiClient.patchData(
+    return patchData(
       Constants.persons,
       {
         "secondName": lastName,
@@ -103,7 +100,7 @@ class ProfileRepo {
   }
 
   Future<Response> changeBirthDay({required String birthday}) async {
-    return apiClient.patchData(
+    return patchData(
       Constants.persons,
       {
         "birthDate": birthday,
@@ -112,7 +109,7 @@ class ProfileRepo {
   }
 
   Future<Response> changeSex({required String sex}) async {
-    return apiClient.patchData(
+    return patchData(
       Constants.persons,
       {
         "sex": sex,
@@ -122,7 +119,7 @@ class ProfileRepo {
 
   Future<Response> changeDni({String? prefix, String? dni}) async {
     if (prefix == null) {
-      return apiClient.patchData(
+      return patchData(
         Constants.persons,
         {
           "dni": dni,
@@ -131,7 +128,7 @@ class ProfileRepo {
     }
 
     if (dni == null) {
-      return apiClient.patchData(
+      return patchData(
         Constants.persons,
         {
           "dniTypePrefix": prefix,
@@ -139,7 +136,7 @@ class ProfileRepo {
       );
     }
 
-    return apiClient.patchData(
+    return patchData(
       Constants.persons,
       {
         "dniTypePrefix": prefix,

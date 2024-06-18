@@ -2,12 +2,9 @@ import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
 /// A class that represents the charge repository
-class ChargeRepo {
+class ChargeRepo extends RestService{
   /// Constructor
-  ChargeRepo({required this.apiClient});
-
-  /// The api client
-  final RestService apiClient;
+  ChargeRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   /// Get the list of charges
   Future<Response<dynamic>> postCharges({
@@ -16,7 +13,7 @@ class ChargeRepo {
     required double vesTip,
     required String concept,
   }) {
-    return apiClient.postData(Constants.charges, {
+    return postData(Constants.charges, {
       'reciverPoneNumber': phoneOrEmail,
       'vesAmount': vesAmount,
       'vesTip': vesTip,
@@ -26,7 +23,7 @@ class ChargeRepo {
 
   /// Get the list of charges
   Future<Response<dynamic>> postResentChargeNotification({required String idCharge}) {
-    return apiClient.postData(
+    return postData(
       '${Constants.charges}/$idCharge/resend-notifications',
       {'notificationType': 'WHATSAPP'},
     );
@@ -37,14 +34,14 @@ class ChargeRepo {
     required String idCharge,
     required String referenceCode,
   }) {
-    return apiClient.patchData('${Constants.charges}/$idCharge/validate-payments', {
+    return patchData('${Constants.charges}/$idCharge/validate-payments', {
       'referenceCode': referenceCode,
     });
   }
 
   /// Get the list of charges
   Future<Response<dynamic>> patchRejectCharge({required String idCharge}) {
-    return apiClient.patchData('${Constants.charges}/$idCharge/reject', {});
+    return patchData('${Constants.charges}/$idCharge/reject', {});
   }
 
   /// Get the list of charges
@@ -56,7 +53,7 @@ class ChargeRepo {
     required String dniPrefix,
     String? concept,
   }) {
-    return apiClient.postData(Constants.cashBacks, {
+    return postData(Constants.cashBacks, {
       'bankCode': bankCode,
       'phoneNumber': phoneNumber,
       'amount': amount,
@@ -68,7 +65,7 @@ class ChargeRepo {
 
   /// Get the list of charges
   Future<Response<dynamic>> rejectCharge({required String rejectURL}) {
-    return apiClient.patchData(rejectURL, {});
+    return patchData(rejectURL, {});
   }
 
   /// Get the list of charges
@@ -76,13 +73,13 @@ class ChargeRepo {
     required String id,
     required String reference,
   }) {
-    return apiClient.patchData('/charges/$id/validate-payments', {
+    return patchData('/charges/$id/validate-payments', {
       'referenceCode': reference,
     });
   }
 
   /// Get the list of charges
   Future<Response<dynamic>> readjustCharge({required String id}) {
-    return apiClient.patchData('/charges/$id/readjusted', {});
+    return patchData('/charges/$id/readjusted', {});
   }
 }
