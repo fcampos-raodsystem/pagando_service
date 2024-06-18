@@ -13,12 +13,14 @@ class RestService extends GetConnect implements GetxService {
     required this.appBaseDevUrl,
     required this.isDev,
     this.token,
+    required this.cancelToken
   }) {
     token = token;
     updateHeader(token);
     allowAutoSignedCert = true;
   }
 
+  final CancelToken cancelToken;
   final bool isDev;
   final String appBaseDevUrl;
   final String appBaseUrl;
