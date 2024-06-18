@@ -1,6 +1,6 @@
 name: pagando_service
 description: Pagando API Service
-version: 0.1.0+3
+version: 0.1.3+5
 publish_to: none
 
 environment:
