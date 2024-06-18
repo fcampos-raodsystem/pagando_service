@@ -12,7 +12,6 @@ class RestService extends GetConnect implements GetxService {
     required this.appBaseDevUrl,
     required this.isDev,
   }) {
-    updateHeader(jwtToken);
     allowAutoSignedCert = true;
 
     payingHttpClient = GetHttpClient(
@@ -38,7 +37,7 @@ class RestService extends GetConnect implements GetxService {
   final int timeoutInSeconds = 30;
   final int maxRetry = 2;
   static String? jwtToken;
-  late Map<String, String> _mainHeaders;
+  static Map<String, String>? _mainHeaders;
 
   Future<bool> hasInternetConnection() async {
     try {
@@ -57,20 +56,21 @@ class RestService extends GetConnect implements GetxService {
     return false;
   }
 
-  Map<String, String> updateHeader(String? token, {bool setHeader = true}) {
+  Map<String, String>? updateHeader(String? token, {bool setHeader = true}) {
     late Map<String, String> header = {};
+
+    if (setHeader) {
+      if (token != null) {
+        jwtToken = token;
+      }
+    }
     if (token == null) {
       header = <String, String>{'content-type': 'application/json; charset=UTF-8'};
     } else {
       header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $jwtToken'};
     }
-    if (setHeader) {
-      if (token != null) {
-        jwtToken = token;
-      }
-      _mainHeaders = header;
-    }
-    return header;
+    _mainHeaders = header;
+    return _mainHeaders;
   }
 
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
