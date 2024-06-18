@@ -1,12 +1,8 @@
-import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
-/// A class that represents the charge repository
-class ChargeRepo extends RestService{
-  /// Constructor
-  ChargeRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class ChargeRepository extends RestService {
+  ChargeRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
-  /// Get the list of charges
   Future<Response<dynamic>> postCharges({
     required String phoneOrEmail,
     required double vesAmount,
@@ -21,7 +17,6 @@ class ChargeRepo extends RestService{
     });
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> postResentChargeNotification({required String idCharge}) {
     return postData(
       '${Constants.charges}/$idCharge/resend-notifications',
@@ -29,7 +24,6 @@ class ChargeRepo extends RestService{
     );
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> pacthValidateCharge({
     required String idCharge,
     required String referenceCode,
@@ -39,12 +33,10 @@ class ChargeRepo extends RestService{
     });
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> patchRejectCharge({required String idCharge}) {
     return patchData('${Constants.charges}/$idCharge/reject', {});
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> postCashBacks({
     required String bankCode,
     required String phoneNumber,
@@ -63,12 +55,10 @@ class ChargeRepo extends RestService{
     });
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> rejectCharge({required String rejectURL}) {
     return patchData(rejectURL, {});
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> payChargeByReference({
     required String id,
     required String reference,
@@ -78,7 +68,6 @@ class ChargeRepo extends RestService{
     });
   }
 
-  /// Get the list of charges
   Future<Response<dynamic>> readjustCharge({required String id}) {
     return patchData('/charges/$id/readjusted', {});
   }

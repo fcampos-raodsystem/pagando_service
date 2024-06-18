@@ -1,18 +1,13 @@
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
-/// This file contains the repository class for profile
-class ProfileRepo extends RestService{
-  /// Constructor con parámetros requeridos
-  ProfileRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class ProfileRepository extends RestService{
+  ProfileRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
-  /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
     return postData(Constants.sendPhoneOtp, {'phone': phone});
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> changePhoneNumber(String phone, String otpCode) {
     return patchData(
       Constants.changePhone,
@@ -26,12 +21,10 @@ class ProfileRepo extends RestService{
     );
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> sendOTPChangeEmail(String email) {
     return postData(Constants.sendEmailOtp, {'email': email});
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> changeEmail(String email, String otpCode) {
     return patchData(
       Constants.changeEmail,
@@ -39,7 +32,6 @@ class ProfileRepo extends RestService{
     );
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> setSecurityQuestions(List<Map<String, String>> questions) {
     return patchData(
       Constants.questions,
@@ -47,7 +39,6 @@ class ProfileRepo extends RestService{
     );
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response<dynamic>> changePassword(
     String newPassword,
     String repeatNewPassword,
@@ -58,7 +49,6 @@ class ProfileRepo extends RestService{
     );
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response> changeTransactionPassword(
     String newPassword,
     String repeatNewPassword,
@@ -69,7 +59,6 @@ class ProfileRepo extends RestService{
     );
   }
 
-  /// Método para obtener el detalle de un perfil
   Future<Response> setProfilePicture(XFile file) {
     final multipartBody = <MultipartBody>[
       MultipartBody('file', file),

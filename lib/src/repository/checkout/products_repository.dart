@@ -1,9 +1,8 @@
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
-class ProductsRepo extends RestService {
-  ProductsRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class ProductsRepository extends RestService {
+  ProductsRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   Future<Response<dynamic>> createProduct({
     required XFile image,

@@ -1,12 +1,8 @@
-import 'package:get/get.dart';
 import 'package:pagando_service/pagando_service.dart';
 
-/// Clase que contiene los métodos para enviar y recibir dinero
-class SendRepo extends RestService {
-  /// Constructor con parámetros requeridos
-  SendRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class SendRepository extends RestService {
+  SendRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
-  /// Método para obtener el usuario actual
   Future<Response<dynamic>> findByPin({required String pin}) {
     return getData(
       '${Constants.findBy}?userDocument=$pin&documentType=PIN',
@@ -45,7 +41,6 @@ class SendRepo extends RestService {
     );
   }
 
-  /// Método para enviar dinero
   Future<Response<dynamic>> sendPagando({
     required String idUser,
     required String concept,
@@ -59,7 +54,6 @@ class SendRepo extends RestService {
     });
   }
 
-  /// Método para solicitar dinero
   Future<Response<dynamic>> requestPagando({
     required String idUser,
     required String concept,
@@ -72,12 +66,10 @@ class SendRepo extends RestService {
     });
   }
 
-  /// Método para aceptar una solicitud de dinero
   Future<Response<dynamic>> acceptRequest({required String acceptURL}) {
     return postData(acceptURL, {});
   }
 
-  /// Método para rechazar una solicitud de dinero
   Future<Response<dynamic>> rejectRequest({required String rejectURL}) {
     return postData(rejectURL, {});
   }

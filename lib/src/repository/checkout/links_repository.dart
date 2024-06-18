@@ -1,8 +1,7 @@
 import 'package:pagando_service/pagando_service.dart';
-import 'package:get/get.dart';
 
-class LinksRepo extends RestService{
-  LinksRepo({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class LinksRepository extends RestService {
+  LinksRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   Future<Response<dynamic>> createLinks({required String userId, required List<String> productIds}) {
     return postData(

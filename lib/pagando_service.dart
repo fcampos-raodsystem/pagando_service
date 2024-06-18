@@ -1,6 +1,7 @@
 /// Pagando API RestService
 library;
 
+export 'package:get/get.dart';
 export 'package:pagando_service/src/constants.dart';
 export 'package:pagando_service/src/model/body/checkout/imagen.dart';
 export 'package:pagando_service/src/model/body/checkout/product.dart';
@@ -40,17 +41,17 @@ export 'package:pagando_service/src/model/response/pagando/user_model.dart';
 export 'package:pagando_service/src/model/response/pagando/user_session_model.dart';
 export 'package:pagando_service/src/model/response/pagando/verify_model.dart';
 export 'package:pagando_service/src/model/response/pagando/withdraw_model.dart';
-export 'package:pagando_service/src/repository/checkout/links_repo.dart';
-export 'package:pagando_service/src/repository/checkout/products_repo.dart';
-export 'package:pagando_service/src/repository/pagando/auth_repo.dart';
-export 'package:pagando_service/src/repository/pagando/bank_repo.dart';
-export 'package:pagando_service/src/repository/pagando/charge_repo.dart';
-export 'package:pagando_service/src/repository/pagando/dash_repo.dart';
-export 'package:pagando_service/src/repository/pagando/dir_repo.dart';
-export 'package:pagando_service/src/repository/pagando/move_repo.dart';
-export 'package:pagando_service/src/repository/pagando/noti_repo.dart';
-export 'package:pagando_service/src/repository/pagando/profile_repo.dart';
-export 'package:pagando_service/src/repository/pagando/secu_repo.dart';
-export 'package:pagando_service/src/repository/pagando/send_repo.dart';
-export 'package:pagando_service/src/repository/pagando/splash_repo.dart';
+export 'package:pagando_service/src/repository/checkout/links_repository.dart';
+export 'package:pagando_service/src/repository/checkout/products_repository.dart';
+export 'package:pagando_service/src/repository/pagando/authentication_repository.dart';
+export 'package:pagando_service/src/repository/pagando/bank_repository.dart';
+export 'package:pagando_service/src/repository/pagando/charge_repository.dart';
+export 'package:pagando_service/src/repository/pagando/dashboard_repository.dart';
+export 'package:pagando_service/src/repository/pagando/directory_repository.dart';
+export 'package:pagando_service/src/repository/pagando/movement_repository.dart';
+export 'package:pagando_service/src/repository/pagando/notification_repository.dart';
+export 'package:pagando_service/src/repository/pagando/profile_repository.dart';
+export 'package:pagando_service/src/repository/pagando/security_repository.dart';
+export 'package:pagando_service/src/repository/pagando/send_repository.dart';
+export 'package:pagando_service/src/repository/pagando/splash_repository.dart';
 export 'package:pagando_service/src/rest_service.dart';
