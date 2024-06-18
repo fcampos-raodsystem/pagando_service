@@ -11,10 +11,8 @@ class RestService extends GetConnect implements GetxService {
     required this.appBaseUrl,
     required this.appBaseDevUrl,
     required this.isDev,
-    this.token,
   }) {
-    token = token;
-    updateHeader(token);
+    updateHeader(jwtToken);
     allowAutoSignedCert = true;
 
     payingHttpClient = GetHttpClient(
@@ -39,7 +37,7 @@ class RestService extends GetConnect implements GetxService {
   static const String noInternetMessage = 'Network connection failed. Please try again.';
   final int timeoutInSeconds = 30;
   final int maxRetry = 2;
-  String? token;
+  static String? jwtToken;
   late Map<String, String> _mainHeaders;
 
   Future<bool> hasInternetConnection() async {
@@ -64,11 +62,11 @@ class RestService extends GetConnect implements GetxService {
     if (token == null) {
       header = <String, String>{'content-type': 'application/json; charset=UTF-8'};
     } else {
-      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'};
+      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $jwtToken'};
     }
     if (setHeader) {
       if (token != null) {
-        this.token = token;
+        jwtToken = token;
       }
       _mainHeaders = header;
     }
