@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
-import 'package:retry/retry.dart';
 
 class RestService extends GetConnect implements GetxService {
   RestService({
@@ -13,14 +12,27 @@ class RestService extends GetConnect implements GetxService {
     required this.appBaseDevUrl,
     required this.isDev,
     this.token,
-    required this.cancelToken
   }) {
     token = token;
     updateHeader(token);
     allowAutoSignedCert = true;
+
+    payingHttpClient = GetHttpClient(
+        userAgent: userAgent,
+        sendUserAgent: sendUserAgent,
+        timeout: timeout,
+        followRedirects: followRedirects,
+        maxRedirects: maxRedirects,
+        maxAuthRetries: maxAuthRetries,
+        allowAutoSignedCert: allowAutoSignedCert,
+        baseUrl: baseUrl,
+        trustedCertificates: trustedCertificates,
+        withCredentials: withCredentials,
+        findProxy: findProxy);
   }
 
-  final CancelToken cancelToken;
+  late GetHttpClient payingHttpClient;
+
   final bool isDev;
   final String appBaseDevUrl;
   final String appBaseUrl;
@@ -63,62 +75,28 @@ class RestService extends GetConnect implements GetxService {
     return header;
   }
 
-  Future<Response> getData(
-    String uri, {
-    Map<String, String>? headers,
-  }) async {
+  Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-      }
-
-      bool hasInternet = await hasInternetConnection();
-      if (!hasInternet) {
-        return const Response(statusCode: 1, statusText: noInternetMessage);
-      }
-      final response = await retry(
-        maxAttempts: maxRetry,
-        () => get(
-          isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-          headers: headers ?? _mainHeaders,
-        ).timeout(Duration(seconds: timeoutInSeconds)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
+      final response = await payingHttpClient.get(
+        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
+        headers: headers ?? _mainHeaders,
       );
       return handleResponse(response);
     } catch (e) {
-      if (kDebugMode) {
-        print("Error on GET: $e");
-      }
-      return const Response(statusCode: 1, statusText: noInternetMessage);
+      return Response(statusCode: 1, statusText: 'Error on GET: $e');
     }
   }
 
-  Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers, int? timeout}) async {
+  Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
-      }
-      bool hasInternet = await hasInternetConnection();
-
-      if (!hasInternet) {
-        return const Response(statusCode: 1, statusText: noInternetMessage);
-      }
-      final response = await retry(
-        maxAttempts: maxRetry,
-        () => post(
-          isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-          jsonEncode(body),
-          headers: headers ?? _mainHeaders,
-        ).timeout(Duration(seconds: timeout ?? timeoutInSeconds)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
+      final response = await payingHttpClient.post(
+        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
+        body: body,
+        headers: headers ?? _mainHeaders,
       );
       return handleResponse(response);
     } catch (e) {
-      if (kDebugMode) {
-        print("Error on POST: $e");
-      }
-      return const Response(statusCode: 1, statusText: noInternetMessage);
+      return Response(statusCode: 1, statusText: 'Error on POST: $e');
     }
   }
 
@@ -148,9 +126,9 @@ class RestService extends GetConnect implements GetxService {
           ),
         ));
       }
-      final response = post(
+      final response = payingHttpClient.post(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        form,
+        body: form,
         headers: headers ?? _mainHeaders,
       );
 
@@ -165,85 +143,39 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
-      }
-      bool hasInternet = await hasInternetConnection();
-
-      if (!hasInternet) {
-        return const Response(statusCode: 1, statusText: noInternetMessage);
-      }
-      final response = await retry(
-        maxAttempts: maxRetry,
-        () => put(
-          isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-          jsonEncode(body),
-          headers: headers ?? _mainHeaders,
-        ).timeout(Duration(seconds: timeoutInSeconds)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
+      final response = await payingHttpClient.put(
+        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
+        body: body,
+        headers: headers ?? _mainHeaders,
       );
       return handleResponse(response);
     } catch (e) {
-      if (kDebugMode) {
-        print("Error on PUT: $e");
-      }
-      return const Response(statusCode: 1, statusText: noInternetMessage);
+      return Response(statusCode: 1, statusText: 'Error on PUT: $e');
     }
   }
 
   Future<Response> patchData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
-      }
-      bool hasInternet = await hasInternetConnection();
-      if (!hasInternet) {
-        return const Response(statusCode: 1, statusText: noInternetMessage);
-      }
-      final response = await retry(
-        maxAttempts: maxRetry,
-        () => patch(
-          isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-          jsonEncode(body),
-          headers: headers ?? _mainHeaders,
-        ).timeout(Duration(seconds: timeoutInSeconds)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
+      final response = await payingHttpClient.patch(
+        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
+        body: body,
+        headers: headers ?? _mainHeaders,
       );
       return handleResponse(response);
     } catch (e) {
-      if (kDebugMode) {
-        print("Error on PACTH: $e");
-      }
-      return const Response(statusCode: 1, statusText: noInternetMessage);
+      return Response(statusCode: 1, statusText: 'Error on PATCH: $e');
     }
   }
 
   Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
     try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-      }
-      bool hasInternet = await hasInternetConnection();
-
-      if (!hasInternet) {
-        return const Response(statusCode: 1, statusText: noInternetMessage);
-      }
-      final response = await retry(
-        maxAttempts: maxRetry,
-        () => delete(
-          isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-          headers: headers ?? _mainHeaders,
-        ).timeout(Duration(seconds: timeoutInSeconds)),
-        retryIf: (e) => e is SocketException || e is TimeoutException,
+      final response = await payingHttpClient.delete(
+        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
+        headers: headers ?? _mainHeaders,
       );
       return handleResponse(response);
     } catch (e) {
-      if (kDebugMode) {
-        print("Error on DELETE: $e");
-      }
-      return const Response(statusCode: 1, statusText: noInternetMessage);
+      return Response(statusCode: 1, statusText: 'Error on DELETE: $e');
     }
   }
 
@@ -270,6 +202,22 @@ class RestService extends GetConnect implements GetxService {
     }
 
     return response;
+  }
+
+  void CancelRequest() {
+    payingHttpClient.close();
+    payingHttpClient = GetHttpClient(
+        userAgent: userAgent,
+        sendUserAgent: sendUserAgent,
+        timeout: timeout,
+        followRedirects: followRedirects,
+        maxRedirects: maxRedirects,
+        maxAuthRetries: maxAuthRetries,
+        allowAutoSignedCert: allowAutoSignedCert,
+        baseUrl: baseUrl,
+        trustedCertificates: trustedCertificates,
+        withCredentials: withCredentials,
+        findProxy: findProxy);
   }
 }
 
