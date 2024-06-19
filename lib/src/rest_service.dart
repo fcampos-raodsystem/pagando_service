@@ -1,10 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:get/get.dart';
+import 'package:pagando_service/pagando_service.dart';
 
 class RestService extends GetConnect implements GetxService {
   RestService({
@@ -101,13 +95,13 @@ class RestService extends GetConnect implements GetxService {
   Future<Response> postMultipartData(
     String uri,
     Map<String, String> body,
-    List<MultipartBody> multipartBody, {
+    List<MultipartFile> multipartFile, {
     Map<String, String>? headers,
   }) async {
     try {
       if (kDebugMode) {
         print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body with ${multipartBody.length} picture');
+        print('====> API Body: $body with ${multipartFile.length} file');
       }
       bool hasInternet = await hasInternetConnection();
 
@@ -115,15 +109,10 @@ class RestService extends GetConnect implements GetxService {
         return const Response(statusCode: 1, statusText: noInternetMessage);
       }
       final form = FormData({});
-      for (final multipart in multipartBody) {
-        form.files.add(MapEntry(
-          "file[]",
-          MultipartFile(
-            multipart.file,
-            filename: '${DateTime.now().millisecondsSinceEpoch}.${multipart.file!.name.split(".")}',
-          ),
-        ));
+      for (final file in multipartFile) {
+        form.files.add(MapEntry("file[]", file));
       }
+
       final response = payingHttpClient.post(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         body: form,
@@ -217,11 +206,4 @@ class RestService extends GetConnect implements GetxService {
         withCredentials: withCredentials,
         findProxy: findProxy);
   }
-}
-
-class MultipartBody {
-  MultipartBody(this.key, this.file);
-
-  String key;
-  XFile? file;
 }

@@ -1,6 +1,12 @@
 /// Pagando API RestService
 library;
 
+export 'dart:async';
+export 'dart:convert';
+export 'dart:io' hide HeaderValue;
+
+export 'package:flutter/foundation.dart';
+export 'package:flutter_image_compress/flutter_image_compress.dart';
 export 'package:get/get.dart';
 export 'package:pagando_service/src/constants.dart';
 export 'package:pagando_service/src/model/body/checkout/imagen.dart';

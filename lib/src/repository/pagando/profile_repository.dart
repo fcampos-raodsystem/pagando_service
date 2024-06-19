@@ -1,7 +1,6 @@
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:pagando_service/pagando_service.dart';
 
-class ProfileRepository extends RestService{
+class ProfileRepository extends RestService {
   ProfileRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
@@ -59,14 +58,22 @@ class ProfileRepository extends RestService{
     );
   }
 
-  Future<Response> setProfilePicture(XFile file) {
-    final multipartBody = <MultipartBody>[
-      MultipartBody('file', file),
-    ];
+  Future<Response> setProfilePicture(XFile file, String jwtToken) async {
+    final compressedFile = await FlutterImageCompress.compressWithFile(
+      file.path,
+      quality: 88,
+    );
+
+    final multipartFile = MultipartFile(compressedFile, filename: 'profile');
+
     return postMultipartData(
       Constants.imageUpload,
       {},
-      multipartBody,
+      [multipartFile],
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer $jwtToken',
+      },
     );
   }
 
