@@ -1,4 +1,6 @@
+import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:pagando_service/pagando_service.dart';
+import 'package:http/http.dart' as http;
 
 class RestService extends GetConnect implements GetxService {
   RestService({
@@ -92,34 +94,42 @@ class RestService extends GetConnect implements GetxService {
     }
   }
 
-  Future<Response> postMultipartData(
+  Future<Response<dynamic>> postMultipartData(
     String uri,
     Map<String, String> body,
-    List<MultipartFile> multipartFile, {
+    List<MultipartBody> multipartBody, {
     Map<String, String>? headers,
   }) async {
     try {
       if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body with ${multipartFile.length} file');
+        print('====> API Call: $uri\nHeader: $_mainHeaders');
+        print('====> API Body: $body with ${multipartBody.length} picture');
       }
-      bool hasInternet = await hasInternetConnection();
-
-      if (!hasInternet) {
-        return const Response(statusCode: 1, statusText: noInternetMessage);
+      final request = http.MultipartRequest('POST', Uri.parse(appBaseUrl + uri));
+      request.headers.addAll(headers ?? _mainHeaders!);
+      for (final multipart in multipartBody) {
+        if (multipart.file != null) {
+          final list = await multipart.file!.readAsBytes();
+          final compressedList = await FlutterImageCompress.compressWithList(
+            list,
+            minHeight: 1920,
+            minWidth: 1080,
+            quality: 88,
+          );
+          request.files.add(
+            http.MultipartFile(
+              multipart.key,
+              Stream.fromIterable(compressedList.map((e) => [e])),
+              compressedList.length,
+              filename: '${DateTime.now()}.png',
+            ),
+          );
+        }
       }
-      final form = FormData({});
-      for (final file in multipartFile) {
-        form.files.add(MapEntry("file[]", file));
-      }
+      request.fields.addAll(body);
+      final response = await http.Response.fromStream(await request.send());
 
-      final response = payingHttpClient.post(
-        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        body: form,
-        headers: headers ?? _mainHeaders,
-      );
-
-      return handleResponse(response as Response);
+      return handleHttpResponse(response, uri);
     } catch (e) {
       if (kDebugMode) {
         print("Error on POST MU: $e");
@@ -191,6 +201,45 @@ class RestService extends GetConnect implements GetxService {
     return response;
   }
 
+  Response<dynamic> handleHttpResponse(http.Response response, String uri) {
+    dynamic body;
+    try {
+      body = jsonDecode(response.body);
+    } catch (_) {}
+    var response0 = Response(
+      body: body ?? response.body,
+      bodyString: response.body,
+      request: Request(
+        headers: response.request!.headers,
+        method: response.request!.method,
+        url: response.request!.url,
+      ),
+      headers: response.headers,
+      statusCode: response.statusCode,
+      statusText: response.reasonPhrase,
+    );
+    if (response0.statusCode != null) {
+      if (response0.statusCode! < 200 || response.statusCode > 299) {
+        final errorResponse = ErrorsData.fromJson(response0.body);
+        response0 = Response(
+          statusCode: response0.statusCode,
+          body: response0.body,
+          statusText: errorResponse.message,
+        );
+      } else if (response0.statusCode != 200 && response0.body == null) {
+        response0 = const Response(statusCode: 0, statusText: noInternetMessage);
+      }
+    }
+
+    if (kDebugMode) {
+      print('====> API Response: [${response0.statusCode}] $uri');
+      if (response.statusCode != 500) {
+        print('${response0.body}');
+      }
+    }
+    return response0;
+  }
+
   void cancelRequest() {
     payingHttpClient.close();
     payingHttpClient = GetHttpClient(
@@ -206,4 +255,17 @@ class RestService extends GetConnect implements GetxService {
         withCredentials: withCredentials,
         findProxy: findProxy);
   }
+}
+
+class MultipartBody {
+  /// {@macro multipart_body}
+  /// [key] is the key of the file
+  /// [file] is the file to be uploaded
+  MultipartBody(this.key, this.file);
+
+  /// Key
+  String key;
+
+  /// File
+  XFile? file;
 }

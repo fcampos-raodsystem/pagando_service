@@ -59,17 +59,15 @@ class ProfileRepository extends RestService {
   }
 
   Future<Response> setProfilePicture(XFile file, String jwtToken) async {
-    final compressedFile = await FlutterImageCompress.compressWithFile(
-      file.path,
-      quality: 88,
-    );
 
-    final multipartFile = MultipartFile(compressedFile, filename: 'profile');
+    final multipartBody = <MultipartBody>[
+      MultipartBody('file', file),
+    ];
 
     return postMultipartData(
       Constants.imageUpload,
       {},
-      [multipartFile],
+      multipartBody,
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': 'Bearer $jwtToken',

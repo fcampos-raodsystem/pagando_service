@@ -9,8 +9,8 @@ class ProductsRepository extends RestService {
     required String title,
     required String description,
     required String price,
-  }) {
-    List<MultipartFile> files = image.map((e) => MultipartFile(e.path, filename: 'image.jpg')).toList();
+  }) async {
+    final files = image.map((file) => MultipartBody('file', file)).toList();
 
     return postMultipartData(
       Constants.products,
