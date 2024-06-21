@@ -71,6 +71,10 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: $_mainHeaders');
+        print('====> API Header: ${headers ?? _mainHeaders}');
+      }
       final response = await payingHttpClient.get(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         headers: headers ?? _mainHeaders,
@@ -83,6 +87,11 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: $_mainHeaders');
+        print('====> API Header: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body');
+      }
       final response = await payingHttpClient.post(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         body: body,
@@ -140,6 +149,11 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
+      if (kDebugMode) {
+        print('====> API Call: $uri\nHeader: $_mainHeaders');
+        print('====> API Header: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body');
+      }
       final response = await payingHttpClient.put(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         body: body,
@@ -153,6 +167,11 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> patchData(String uri, dynamic body, {Map<String, String>? headers}) async {
     try {
+      f (kDebugMode) {
+        print('====> API Call: $uri\nHeader: $_mainHeaders');
+        print('====> API Header: ${headers ?? _mainHeaders}');
+        print('====> API Body: $body');
+      }
       final response = await payingHttpClient.patch(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         body: body,
@@ -166,6 +185,10 @@ class RestService extends GetConnect implements GetxService {
 
   Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
     try {
+      f (kDebugMode) {
+        print('====> API Call: $uri\nHeader: $_mainHeaders');
+        print('====> API Header: ${headers ?? _mainHeaders}');
+      }
       final response = await payingHttpClient.delete(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         headers: headers ?? _mainHeaders,
@@ -241,6 +264,9 @@ class RestService extends GetConnect implements GetxService {
   }
 
   void cancelRequest() {
+    f (kDebugMode) {
+      print('====> API Cancelled');
+    }
     payingHttpClient.close();
     payingHttpClient = GetHttpClient(
         userAgent: userAgent,
