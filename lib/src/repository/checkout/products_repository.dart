@@ -21,6 +21,10 @@ class ProductsRepository extends RestService {
         'price': price,
       },
       files,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': 'Bearer ${RestService.jwtToken}',
+      },
     );
   }
 }
