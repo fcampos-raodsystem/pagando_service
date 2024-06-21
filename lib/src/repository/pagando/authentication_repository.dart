@@ -94,6 +94,24 @@ class AuthenticationRepository extends RestService {
     });
   }
 
+  Future<Response> loginWeb({
+    required String phoneOrEmail,
+    String? password,
+    String? otp,
+  }) {
+    if (password != null) {
+      return postData(Constants.authLogin, {
+        'phoneOrEmail': phoneOrEmail,
+        'password': password,
+      });
+    }
+
+    return postData(Constants.authLogin, {
+      'phoneOrEmail': phoneOrEmail,
+      'otpCode': otp,
+    });
+  }
+
   Future<Response> getMe() {
     return getData(Constants.me);
   }
