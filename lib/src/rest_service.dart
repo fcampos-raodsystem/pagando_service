@@ -107,21 +107,6 @@ class RestService extends GetxService {
     }
   }
 
-  Response<dynamic> createErrorResponse(
-    String uri,
-    Map<String, String>? headers,
-    String message,
-  ) {
-    return Response(
-      statusCode: 1,
-      statusMessage: message,
-      requestOptions: RequestOptions(
-        path: uri,
-        headers: headers ?? _mainHeaders,
-      ),
-    );
-  }
-
   Response<dynamic> handleResponse(Response<dynamic> response) {
     dynamic body;
     if (response.data != null) {
