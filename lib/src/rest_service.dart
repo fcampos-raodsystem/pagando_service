@@ -90,14 +90,9 @@ class RestService extends GetxService {
   }
 
   Future<Response> _handleRequest(String uri, {Map<String, String>? headers, required Future<Response> Function() request}) async {
-    try {
       logApiCall(uri, headers: headers);
       final response = await request();
       return handleResponse(response);
-    } catch (e) {
-      logError(e);
-      return createErrorResponse(uri, headers, 'Error on request: $e');
-    }
   }
 
   void logApiCall(String uri, {Map<String, String>? headers}) {
