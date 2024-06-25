@@ -40,14 +40,15 @@ class PayingInterceptor extends Interceptor {
     if (kDebugMode) {
       print('====> STATUS CODE: [${response.statusCode}]');
       print('====> API Call: ${response.requestOptions.path}');
-      print('====> BODY: ${response.data}');      
+      print('====> BODY: ${response.data}');
     }
     super.onResponse(response, handler);
   }
 
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    print('ERROR[${err.response?.statusCode}] => PATH: ${err.requestOptions.path}');
+    print('====> ERROR[${err.response?.statusCode}]');
+    print('====> PATH: ${err.requestOptions.path}');
     super.onError(err, handler);
   }
 }
