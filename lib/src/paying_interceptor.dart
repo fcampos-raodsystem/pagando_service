@@ -28,17 +28,17 @@ class PayingInterceptor extends Interceptor {
 
   @override
   Future onResponse(Response response, ResponseInterceptorHandler handler) async {
-    if (response.statusCode! < 200 || response.statusCode! > 299) {
-      return handler.reject(DioException(
-        requestOptions: response.requestOptions,
-        response: Response(
-          statusCode: response.statusCode,
-          requestOptions: response.requestOptions,
-          data: response.data,
-        ),
-        type: DioExceptionType.badResponse,
-      ));
-    }
+    // if (response.statusCode! < 200 || response.statusCode! > 299) {
+    //   return handler.reject(DioException(
+    //     requestOptions: response.requestOptions,
+    //     response: Response(
+    //       statusCode: response.statusCode,
+    //       requestOptions: response.requestOptions,
+    //       data: response.data,
+    //     ),
+    //     type: DioExceptionType.badResponse,
+    //   ));
+    // }
     return handler.next(response);
   }
 
