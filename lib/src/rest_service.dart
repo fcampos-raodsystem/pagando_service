@@ -52,8 +52,7 @@ class RestService extends GetxService {
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers ?? _mainHeaders,
-      request: () => _dio.get(uri, options: Options(headers: headers)),
+      request: () => _dio.get(uri, options: Options(headers: headers ?? _mainHeaders)),
     );
   }
 
@@ -61,9 +60,8 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers ?? _mainHeaders,
       request: () =>
-          _dio.post(uri, data: body, options: Options(headers: headers)),
+          _dio.post(uri, data: body, options: Options(headers: headers ?? _mainHeaders)),
     );
   }
 
@@ -71,9 +69,8 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers ?? _mainHeaders,
       request: () =>
-          _dio.put(uri, data: body, options: Options(headers: headers)),
+          _dio.put(uri, data: body, options: Options(headers: headers ?? _mainHeaders)),
     );
   }
 
@@ -81,9 +78,8 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers ?? _mainHeaders,
       request: () =>
-          _dio.patch(uri, data: body, options: Options(headers: headers)),
+          _dio.patch(uri, data: body, options: Options(headers: headers ?? _mainHeaders)),
     );
   }
 
@@ -91,14 +87,12 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers ?? _mainHeaders,
-      request: () => _dio.delete(uri, options: Options(headers: headers)),
+      request: () => _dio.delete(uri, options: Options(headers: headers ?? _mainHeaders)),
     );
   }
 
   Future<Response> _handleRequest(
     String uri, {
-    Map<String, String>? headers,
     required Future<Response> Function() request,
   }) async {
     final response = await request();
