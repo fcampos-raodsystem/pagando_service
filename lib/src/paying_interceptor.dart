@@ -44,10 +44,10 @@ class PayingInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    if (err.error is DioException && (err.error as DioException).message == 'No internet') {
+    if (err.error is DioException && (err.error as DioException).message == noInternetMessage) {
       handler.next(DioException(
         requestOptions: err.requestOptions,
-        error: 'No internet',
+        error: noInternetMessage,
         response: Response(
           statusCode: 1,
           requestOptions: err.requestOptions,

@@ -118,15 +118,15 @@ class RestService extends GetxService {
       print('${response.data}');
     }
 
-    if (response.statusCode != null && (response.statusCode! < 200 || response.statusCode! > 299)) {
-      final errorResponse = body;
-      return Response<dynamic>(
-        data: body,
-        statusCode: response.statusCode,
-        statusMessage: errorResponse['message'],
-        requestOptions: response.requestOptions,
-      );
-    }
+    // if (response.statusCode != null && (response.statusCode! < 200 || response.statusCode! > 299)) {
+    //   final errorResponse = body;
+    //   return Response<dynamic>(
+    //     data: body,
+    //     statusCode: response.statusCode,
+    //     statusMessage: errorResponse['message'],
+    //     requestOptions: response.requestOptions,
+    //   );
+    // }
 
     return response;
   }
