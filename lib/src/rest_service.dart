@@ -92,6 +92,14 @@ class RestService extends GetConnect implements GetxService {
         print('====> API Header: ${headers ?? _mainHeaders}');
         print('====> API Body: $body');
       }
+
+      if(headers != null){
+        headers['content-length'] = bodyString.length.toString(); 
+      }else{
+        _mainHeaders['content-length'] = bodyString.length.toString(); 
+      }
+
+
       final response = await payingHttpClient.post(
         isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
         body: body,
