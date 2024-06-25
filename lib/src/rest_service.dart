@@ -57,31 +57,38 @@ class RestService extends GetxService {
     );
   }
 
-  Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
+  Future<Response> postData(String uri, dynamic body,
+      {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
       headers: headers,
-      request: () => _dio.post(uri, data: body, options: Options(headers: headers)),
+      request: () =>
+          _dio.post(uri, data: body, options: Options(headers: headers)),
     );
   }
 
-  Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
+  Future<Response> putData(String uri, dynamic body,
+      {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
       headers: headers,
-      request: () => _dio.put(uri, data: body, options: Options(headers: headers)),
+      request: () =>
+          _dio.put(uri, data: body, options: Options(headers: headers)),
     );
   }
 
-  Future<Response> patchData(String uri, dynamic body, {Map<String, String>? headers}) async {
+  Future<Response> patchData(String uri, dynamic body,
+      {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
       headers: headers,
-      request: () => _dio.patch(uri, data: body, options: Options(headers: headers)),
+      request: () =>
+          _dio.patch(uri, data: body, options: Options(headers: headers)),
     );
   }
 
-  Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
+  Future<Response> deleteData(String uri,
+      {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
       headers: headers,
@@ -89,10 +96,13 @@ class RestService extends GetxService {
     );
   }
 
-  Future<Response> _handleRequest(String uri, {Map<String, String>? headers, required Future<Response> Function() request}) async {
-      logApiCall(uri, headers: headers);
-      final response = await request();
-      return handleResponse(response);
+  Future<Response> _handleRequest(
+    String uri, {
+    Map<String, String>? headers,
+    required Future<Response> Function() request,
+  }) async {
+    final response = await request();
+    return handleResponse(response);
   }
 
   void logApiCall(String uri, {Map<String, String>? headers}) {
@@ -107,27 +117,7 @@ class RestService extends GetxService {
     }
   }
 
-  Response<dynamic> handleResponse(Response<dynamic> response) {
-    dynamic body;
-    if (response.data != null) {
-      body = response.data;
-    }
-
-    if (kDebugMode) {
-      print('====> API Response: [${response.statusCode}] ${response.requestOptions.uri.toString()}');
-      print('${response.data}');
-    }
-
-    // if (response.statusCode != null && (response.statusCode! < 200 || response.statusCode! > 299)) {
-    //   final errorResponse = body;
-    //   return Response<dynamic>(
-    //     data: body,
-    //     statusCode: response.statusCode,
-    //     statusMessage: errorResponse['message'],
-    //     requestOptions: response.requestOptions,
-    //   );
-    // }
-
+  Response<dynamic> handleResponse(Response response) {
     return response;
   }
 
