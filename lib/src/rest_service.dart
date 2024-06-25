@@ -61,9 +61,9 @@ class RestService extends GetConnect implements GetxService {
       }
     }
     if (token == null) {
-      header = <String, String>{'content-type': 'application/json; charset=UTF-8'};
+      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Accept': 'application/json',};
     } else {
-      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $jwtToken'};
+      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Accept': 'application/json', 'Authorization': 'Bearer $jwtToken',};
     }
     _mainHeaders = header;
     return _mainHeaders;
