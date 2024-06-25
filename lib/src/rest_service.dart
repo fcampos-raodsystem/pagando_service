@@ -52,7 +52,7 @@ class RestService extends GetxService {
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers,
+      headers: headers ?? _mainHeaders,
       request: () => _dio.get(uri, options: Options(headers: headers)),
     );
   }
@@ -61,7 +61,7 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers,
+      headers: headers ?? _mainHeaders,
       request: () =>
           _dio.post(uri, data: body, options: Options(headers: headers)),
     );
@@ -71,7 +71,7 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers,
+      headers: headers ?? _mainHeaders,
       request: () =>
           _dio.put(uri, data: body, options: Options(headers: headers)),
     );
@@ -81,7 +81,7 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers,
+      headers: headers ?? _mainHeaders,
       request: () =>
           _dio.patch(uri, data: body, options: Options(headers: headers)),
     );
@@ -91,7 +91,7 @@ class RestService extends GetxService {
       {Map<String, String>? headers}) async {
     return _handleRequest(
       uri,
-      headers: headers,
+      headers: headers ?? _mainHeaders,
       request: () => _dio.delete(uri, options: Options(headers: headers)),
     );
   }
