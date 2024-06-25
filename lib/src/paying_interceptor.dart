@@ -3,19 +3,13 @@ import 'package:pagando_service/pagando_service.dart';
 class PayingInterceptor extends Interceptor {
   static const String noInternetMessage = 'Network connection failed. Please try again.';
   Future<bool> hasInternetConnection() async {
-    try {
-      if (GetPlatform.isWeb) return true;
-      final result = await InternetAddress.lookup("pagando.tech");
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (e) {
-      print('SocketException: $e');
-      return false;
-    } catch (e) {
-      print('Unexpected exception: $e');
-      return false;
+    if (GetPlatform.isWeb) return true;
+  
+    final result = await InternetAddress.lookup("pagando.tech");
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
     }
+    
     return false;
   }
 
