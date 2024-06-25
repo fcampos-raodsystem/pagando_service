@@ -1,31 +1,19 @@
-import 'package:get/get_connect/http/src/request/request.dart';
 import 'package:pagando_service/pagando_service.dart';
-import 'package:http/http.dart' as http;
 
-class RestService extends GetConnect implements GetxService {
+class RestService extends GetxService {
   RestService({
     required this.appBaseUrl,
     required this.appBaseDevUrl,
     required this.isDev,
   }) {
-    allowAutoSignedCert = true;
-
-    payingHttpClient = GetHttpClient(
-        userAgent: userAgent,
-        sendUserAgent: sendUserAgent,
-        timeout: timeout,
-        followRedirects: followRedirects,
-        maxRedirects: maxRedirects,
-        maxAuthRetries: maxAuthRetries,
-        allowAutoSignedCert: allowAutoSignedCert,
-        baseUrl: baseUrl,
-        trustedCertificates: trustedCertificates,
-        withCredentials: withCredentials,
-        findProxy: findProxy);
+    _dio = Dio(BaseOptions(
+      baseUrl: isDev ? appBaseDevUrl : appBaseUrl,
+      headers: _mainHeaders,
+    ));
   }
 
-  late GetHttpClient payingHttpClient;
-
+  late Dio _dio;
+  CancelToken _cancelToken = CancelToken();
   final bool isDev;
   final String appBaseDevUrl;
   final String appBaseUrl;
@@ -61,245 +49,128 @@ class RestService extends GetConnect implements GetxService {
       }
     }
     if (token == null) {
-      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Accept': 'application/json',};
+      header = <String, String>{
+        'content-type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+      };
     } else {
-      header = <String, String>{'content-type': 'application/json; charset=UTF-8', 'Accept': 'application/json', 'Authorization': 'Bearer $jwtToken',};
+      header = <String, String>{
+        'content-type': 'application/json; charset=UTF-8',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $jwtToken',
+      };
     }
     _mainHeaders = header;
     return _mainHeaders;
   }
 
   Future<Response> getData(String uri, {Map<String, String>? headers}) async {
-    try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: $_mainHeaders');
-        print('====> API Header: ${headers ?? _mainHeaders}');
-      }
-      final response = await payingHttpClient.get(
-        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        headers: headers ?? _mainHeaders,
-      );
-      return handleResponse(response);
-    } catch (e) {
-      return Response(statusCode: 1, statusText: 'Error on GET: $e');
-    }
+    return _handleRequest(
+      uri,
+      headers: headers,
+      request: () => _dio.get(uri, options: Options(headers: headers)),
+    );
   }
 
   Future<Response> postData(String uri, dynamic body, {Map<String, String>? headers}) async {
-    try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: $_mainHeaders');
-        print('====> API Header: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
-      }
-
-      if(headers != null){
-        headers['content-length'] = bodyString.length.toString(); 
-      }else{
-        _mainHeaders['content-length'] = bodyString.length.toString(); 
-      }
-
-
-      final response = await payingHttpClient.post(
-        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        body: body,
-        headers: headers ?? _mainHeaders,
-      );
-      return handleResponse(response);
-    } catch (e) {
-      return Response(statusCode: 1, statusText: 'Error on POST: $e');
-    }
-  }
-
-  Future<Response<dynamic>> postMultipartData(
-    String uri,
-    Map<String, String> body,
-    List<MultipartBody> multipartBody, {
-    Map<String, String>? headers,
-  }) async {
-    try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: $_mainHeaders');
-        print('====> API Body: $body with ${multipartBody.length} picture');
-      }
-      final request = http.MultipartRequest('POST', Uri.parse(appBaseUrl + uri));
-      request.headers.addAll(headers ?? _mainHeaders!);
-      for (final multipart in multipartBody) {
-        if (multipart.file != null) {
-          final list = await multipart.file!.readAsBytes();
-          final compressedList = await FlutterImageCompress.compressWithList(
-            list,
-            minHeight: 1920,
-            minWidth: 1080,
-            quality: 88,
-          );
-          request.files.add(
-            http.MultipartFile(
-              multipart.key,
-              Stream.fromIterable(compressedList.map((e) => [e])),
-              compressedList.length,
-              filename: '${DateTime.now()}.png',
-            ),
-          );
-        }
-      }
-      request.fields.addAll(body);
-      final response = await http.Response.fromStream(await request.send());
-
-      return handleHttpResponse(response, uri);
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error on POST MU: $e");
-      }
-      return const Response(statusCode: 1, statusText: noInternetMessage);
-    }
+    return _handleRequest(
+      uri,
+      headers: headers,
+      request: () => _dio.post(uri, data: body, options: Options(headers: headers)),
+    );
   }
 
   Future<Response> putData(String uri, dynamic body, {Map<String, String>? headers}) async {
-    try {
-      if (kDebugMode) {
-        print('====> API Call: $uri\nHeader: $_mainHeaders');
-        print('====> API Header: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
-      }
-      final response = await payingHttpClient.put(
-        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        body: body,
-        headers: headers ?? _mainHeaders,
-      );
-      return handleResponse(response);
-    } catch (e) {
-      return Response(statusCode: 1, statusText: 'Error on PUT: $e');
-    }
+    return _handleRequest(
+      uri,
+      headers: headers,
+      request: () => _dio.put(uri, data: body, options: Options(headers: headers)),
+    );
   }
 
   Future<Response> patchData(String uri, dynamic body, {Map<String, String>? headers}) async {
-    try {
-      f (kDebugMode) {
-        print('====> API Call: $uri\nHeader: $_mainHeaders');
-        print('====> API Header: ${headers ?? _mainHeaders}');
-        print('====> API Body: $body');
-      }
-      final response = await payingHttpClient.patch(
-        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        body: body,
-        headers: headers ?? _mainHeaders,
-      );
-      return handleResponse(response);
-    } catch (e) {
-      return Response(statusCode: 1, statusText: 'Error on PATCH: $e');
-    }
+    return _handleRequest(
+      uri,
+      headers: headers,
+      request: () => _dio.patch(uri, data: body, options: Options(headers: headers)),
+    );
   }
 
   Future<Response> deleteData(String uri, {Map<String, String>? headers}) async {
+    return _handleRequest(
+      uri,
+      headers: headers,
+      request: () => _dio.delete(uri, options: Options(headers: headers)),
+    );
+  }
+
+  Future<Response> _handleRequest(String uri, {Map<String, String>? headers, required Future<Response> Function() request}) async {
     try {
-      f (kDebugMode) {
-        print('====> API Call: $uri\nHeader: $_mainHeaders');
-        print('====> API Header: ${headers ?? _mainHeaders}');
-      }
-      final response = await payingHttpClient.delete(
-        isDev ? appBaseDevUrl + uri : appBaseUrl + uri,
-        headers: headers ?? _mainHeaders,
-      );
+      logApiCall(uri, headers: headers);
+      final response = await request();
       return handleResponse(response);
     } catch (e) {
-      return Response(statusCode: 1, statusText: 'Error on DELETE: $e');
+      logError(e);
+      return createErrorResponse(uri, headers, 'Error on request: $e');
     }
   }
 
-  Response handleResponse(Response response) {
+  void logApiCall(String uri, {Map<String, String>? headers}) {
+    if (kDebugMode) {
+      print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+    }
+  }
+
+  void logError(dynamic e) {
+    if (kDebugMode) {
+      print("Error on request: $e");
+    }
+  }
+
+  Response<dynamic> createErrorResponse(
+    String uri,
+    Map<String, String>? headers,
+    String message,
+  ) {
+    return Response(
+      statusCode: 1,
+      statusMessage: message,
+      requestOptions: RequestOptions(
+        path: uri,
+        headers: headers ?? _mainHeaders,
+      ),
+    );
+  }
+
+  Response<dynamic> handleResponse(Response<dynamic> response) {
     dynamic body;
-    if (response.bodyString != null) {
-      try {
-        body = jsonDecode(response.bodyString!);
-      } catch (_) {}
+    if (response.data != null) {
+      body = response.data;
     }
 
     if (kDebugMode) {
-      print('====> API Response: [${response.statusCode}] ${response.request?.url.toString()}');
-      print('${response.bodyString}');
+      print('====> API Response: [${response.statusCode}] ${response.requestOptions.uri.toString()}');
+      print('${response.data}');
     }
 
     if (response.statusCode != null && (response.statusCode! < 200 || response.statusCode! > 299)) {
       final errorResponse = body;
-      return Response(
+      return Response<dynamic>(
+        data: body,
         statusCode: response.statusCode,
-        body: body,
-        statusText: errorResponse['message'],
+        statusMessage: errorResponse['message'],
+        requestOptions: response.requestOptions,
       );
     }
 
     return response;
   }
 
-  Response<dynamic> handleHttpResponse(http.Response response, String uri) {
-    dynamic body;
-    try {
-      body = jsonDecode(response.body);
-    } catch (_) {}
-    var response0 = Response(
-      body: body ?? response.body,
-      bodyString: response.body,
-      request: Request(
-        headers: response.request!.headers,
-        method: response.request!.method,
-        url: response.request!.url,
-      ),
-      headers: response.headers,
-      statusCode: response.statusCode,
-      statusText: response.reasonPhrase,
-    );
-    if (response0.statusCode != null) {
-      if (response0.statusCode! < 200 || response.statusCode > 299) {
-        final errorResponse = ErrorsData.fromJson(response0.body);
-        response0 = Response(
-          statusCode: response0.statusCode,
-          body: response0.body,
-          statusText: errorResponse.message,
-        );
-      } else if (response0.statusCode != 200 && response0.body == null) {
-        response0 = const Response(statusCode: 0, statusText: noInternetMessage);
-      }
-    }
-
-    if (kDebugMode) {
-      print('====> API Response: [${response0.statusCode}] $uri');
-      if (response.statusCode != 500) {
-        print('${response0.body}');
-      }
-    }
-    return response0;
-  }
-
   void cancelRequest() {
-    f (kDebugMode) {
+    if (kDebugMode) {
       print('====> API Cancelled');
     }
-    payingHttpClient.close();
-    payingHttpClient = GetHttpClient(
-        userAgent: userAgent,
-        sendUserAgent: sendUserAgent,
-        timeout: timeout,
-        followRedirects: followRedirects,
-        maxRedirects: maxRedirects,
-        maxAuthRetries: maxAuthRetries,
-        allowAutoSignedCert: allowAutoSignedCert,
-        baseUrl: baseUrl,
-        trustedCertificates: trustedCertificates,
-        withCredentials: withCredentials,
-        findProxy: findProxy);
+    _cancelToken.cancel();
+    _cancelToken = CancelToken();
   }
-}
-
-class MultipartBody {
-  /// {@macro multipart_body}
-  /// [key] is the key of the file
-  /// [file] is the file to be uploaded
-  MultipartBody(this.key, this.file);
-
-  /// Key
-  String key;
-
-  /// File
-  XFile? file;
 }

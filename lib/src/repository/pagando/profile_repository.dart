@@ -58,23 +58,6 @@ class ProfileRepository extends RestService {
     );
   }
 
-  Future<Response> setProfilePicture(XFile file) async {
-
-    final multipartBody = <MultipartBody>[
-      MultipartBody('file', file),
-    ];
-
-    return postMultipartData(
-      Constants.imageUpload,
-      {},
-      multipartBody,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': 'Bearer ${RestService.jwtToken}',
-      },
-    );
-  }
-
   Future<Response> changeNames({required String name}) async {
     return patchData(
       Constants.persons,

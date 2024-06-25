@@ -135,12 +135,6 @@ class AuthenticationRepository extends RestService {
   }
 
   Future<Response> verifyTokens({String? jwt, String? refresh}) {
-    if (jwt == null || refresh == null) {
-      final json = VerifyModel(message: 'nullos', data: VerifyData(refreshTokenVerify: false, accessTokenVerify: false));
-
-      return Future.value(Response(body: json.toJson().toString()));
-    }
-
     return postData(Constants.verifyToken, {
       'accessToken': jwt,
       'refreshToken': refresh,
@@ -148,12 +142,6 @@ class AuthenticationRepository extends RestService {
   }
 
   Future<Response> refreshToken({required String refreshToken}) {
-    if (refreshToken.isEmpty) {
-      final json = Tokens(accessToken: '', refreshToken: '');
-
-      return Future.value(Response(body: json.toJson().toString()));
-    }
-
     return postData(Constants.refreshToken, {
       'refreshToken': refreshToken,
     });

@@ -1,6 +1,6 @@
 name: pagando_service
 description: Pagando API Service
-version: 0.1.4+2
+version: 0.1.5
 publish_to: none
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
   get: ^4.6.6
   decimal: ^3.0.2
   connectivity_plus: ^6.0.3
-  http: ^1.2.1
+  dio: ^5.4.3+1
 
 dev_dependencies:
   flutter_test:
