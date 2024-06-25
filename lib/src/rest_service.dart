@@ -10,35 +10,20 @@ class RestService extends GetxService {
       baseUrl: isDev ? appBaseDevUrl : appBaseUrl,
       headers: _mainHeaders,
     ));
+
+    _dio.interceptors.add(PayingInterceptor());
   }
 
   late Dio _dio;
   CancelToken _cancelToken = CancelToken();
+
   final bool isDev;
   final String appBaseDevUrl;
   final String appBaseUrl;
-  static const String noInternetMessage = 'Network connection failed. Please try again.';
   final int timeoutInSeconds = 30;
   final int maxRetry = 2;
   static String? jwtToken;
   static Map<String, String>? _mainHeaders;
-
-  Future<bool> hasInternetConnection() async {
-    try {
-      if (GetPlatform.isWeb) return true;
-      final result = await InternetAddress.lookup("pagando.tech");
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (e) {
-      print('SocketException: $e');
-      return false;
-    } catch (e) {
-      print('Unexpected exception: $e');
-      return false;
-    }
-    return false;
-  }
 
   Map<String, String>? updateHeader(String? token, {bool setHeader = true}) {
     late Map<String, String> header = {};
