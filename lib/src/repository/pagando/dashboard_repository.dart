@@ -1,4 +1,4 @@
-import 'package:paying_service/service';
+import 'package:paying_service/service.dart';
 
 class DashboardRepository extends RestService {
   DashboardRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});

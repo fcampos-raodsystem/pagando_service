@@ -1,4 +1,4 @@
-import 'package:paying_service/service';
+import 'package:paying_service/service.dart';
 
 /// CreatePerson Model
 class CreatePersonModel {

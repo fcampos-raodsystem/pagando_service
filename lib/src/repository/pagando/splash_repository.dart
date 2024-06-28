@@ -1,4 +1,4 @@
-import 'package:paying_service/service';
+import 'package:paying_service/service.dart';
 
 class SplashRepository extends RestService {
   SplashRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});

@@ -1,4 +1,4 @@
-import 'package:paying_service/service';
+import 'package:paying_service/service.dart';
 import 'package:paying_service/src/model/body/pagando/secure_image.dart';
 
 /// UserModel class

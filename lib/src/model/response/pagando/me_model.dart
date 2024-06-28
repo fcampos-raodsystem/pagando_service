@@ -1,4 +1,4 @@
-import 'package:paying_service/service';
+import 'package:paying_service/service.dart';
 
 /// MeModel is a model class that contains the data of the user.
 class MeModel {
