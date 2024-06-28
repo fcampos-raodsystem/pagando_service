@@ -1,4 +1,4 @@
-import 'package:pagando_service/pagando_service.dart';
+import 'package:paying_service/paying_service.dart';
 
 class User {
   User({this.id, this.password, this.email, this.pin, this.phone, this.deletedAt, this.secureConfig, this.person, this.profile, this.securityImage});

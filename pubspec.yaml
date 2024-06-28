@@ -1,4 +1,4 @@
-name: pagando_service
+name: paying_service
 description: Pagando API Service
 version: 0.1.5
 publish_to: none
@@ -10,7 +10,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  retry: ^3.1.2
   flutter_image_compress: ^2.2.0
   get: ^4.6.6
   decimal: ^3.0.2

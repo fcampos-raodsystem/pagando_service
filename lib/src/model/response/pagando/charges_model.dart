@@ -1,4 +1,4 @@
-/// Modelo de respuesta de la API de pagando_service
+/// Modelo de respuesta de la API de paying_service
 class ChargesModel {
   /// Constructor con parámetros requeridos
   ChargesModel({required this.message, required this.data});
@@ -20,7 +20,7 @@ class ChargesModel {
   set id(String id) {}
 }
 
-/// Modelo de datos de la respuesta de la API de pagando_service
+/// Modelo de datos de la respuesta de la API de paying_service
 class DataChargesModel {
   /// Constructor con parámetros requeridos
   DataChargesModel({

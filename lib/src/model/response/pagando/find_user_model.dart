@@ -1,4 +1,4 @@
-import 'package:pagando_service/pagando_service.dart';
+import 'package:paying_service/paying_service.dart';
 
 /// Model for response of find user
 class FindUSer {
