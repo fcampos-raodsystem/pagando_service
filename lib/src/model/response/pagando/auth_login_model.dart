@@ -1,4 +1,4 @@
-import 'package:paying_service/paying_service.dart';
+import 'package:paying_service/service';
 
 /// A class that represents the response of the login request
 class AuthLoginModel {

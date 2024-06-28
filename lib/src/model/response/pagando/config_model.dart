@@ -1,4 +1,4 @@
-import 'package:paying_service/paying_service.dart';
+import 'package:paying_service/service';
 
 /// ConfigModel
 class ConfigModel {

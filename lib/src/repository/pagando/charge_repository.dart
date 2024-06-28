@@ -1,4 +1,4 @@
-import 'package:paying_service/paying_service.dart';
+import 'package:paying_service/service';
 
 class ChargeRepository extends RestService {
   ChargeRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});

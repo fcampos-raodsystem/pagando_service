@@ -1,4 +1,4 @@
-import 'package:paying_service/paying_service.dart';
+import 'package:paying_service/service.dart';
 
 class RestService extends GetxService {
   RestService({
