@@ -3,14 +3,22 @@ import 'package:paying_service/service.dart';
 class PayingInterceptor extends Interceptor {
   static const String noInternetMessage = 'Network connection failed. Please try again.';
   Future<bool> hasInternetConnection() async {
-    if (GetPlatform.isWeb) return true;
+    try {
+      if (GetPlatform.isWeb) return true;
 
-    final result = await InternetAddress.lookup("pagando.tech");
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      return true;
+      final result = await InternetAddress.lookup("pagando.tech");
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+
+      return false;
+    } on SocketException catch (e) {
+      if (kDebugMode) printError(info: " hasInternetConnection: $e");
+      return false;
+    } catch (e) {
+      if (kDebugMode) printError(info: " hasInternetConnection: $e");
+      return false;
     }
-
-    return false;
   }
 
   @override
@@ -28,7 +36,12 @@ class PayingInterceptor extends Interceptor {
     if (!hasInternet) {
       handler.reject(DioException(
         requestOptions: options,
-        error: noInternetMessage,
+        response: Response(
+          statusCode: 1,
+          requestOptions: options,
+        ),
+        type: DioExceptionType.connectionError,
+        message: noInternetMessage,
       ));
     }
 
