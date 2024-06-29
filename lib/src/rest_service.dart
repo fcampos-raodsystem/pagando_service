@@ -1,6 +1,6 @@
 import 'package:paying_service/service.dart';
 
-class RestService extends GetxService {
+class RestService extends GetXState {
   RestService({
     required this.appBaseUrl,
     required this.appBaseDevUrl,
@@ -8,10 +8,15 @@ class RestService extends GetxService {
   }) {
     _dio = Dio(BaseOptions(
       baseUrl: isDev ? appBaseDevUrl : appBaseUrl,
-      headers: _mainHeaders,
+      sendTimeout: Duration(seconds: timeoutInSeconds),
+      receiveTimeout: Duration(seconds: timeoutInSeconds),
+      connectTimeout: Duration(seconds: timeoutInSeconds),
+      followRedirects: false,
+      contentType: 'application/json',
     ));
 
     _dio.interceptors.add(PayingInterceptor());
+    updateHeader(null);
   }
 
   late Dio _dio;
@@ -21,73 +26,63 @@ class RestService extends GetxService {
   final String appBaseDevUrl;
   final String appBaseUrl;
   final int timeoutInSeconds = 30;
-  final int maxRetry = 2;
-  static String? jwtToken;
   static Map<String, String>? _mainHeaders;
 
   Map<String, String>? updateHeader(String? token, {bool setHeader = true}) {
     late Map<String, String> header = {};
 
     if (setHeader) {
-      if (token != null) {
-        jwtToken = token;
+      if (token == null) {
+        header = <String, String>{
+          'content-type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+        };
+      } else {
+        header = <String, String>{
+          'content-type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        };
       }
     }
-    if (token == null) {
-      header = <String, String>{
-        'content-type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-      };
-    } else {
-      header = <String, String>{
-        'content-type': 'application/json; charset=UTF-8',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $jwtToken',
-      };
-    }
+
     _mainHeaders = header;
+    _dio.options.headers = header;
     return _mainHeaders;
   }
 
-  Future<Response> getData(String uri, {Map<String, String>? headers}) async {
+  Future<Response> getData(String uri) async {
     return _handleRequest(
       uri,
-      request: () => _dio.get(uri, options: Options(headers: headers ?? _mainHeaders)),
+      request: () => _dio.get(uri, cancelToken: _cancelToken),
     );
   }
 
-  Future<Response> postData(String uri, dynamic body,
-      {Map<String, String>? headers}) async {
+  Future<Response> postData(String uri, dynamic body) async {
     return _handleRequest(
       uri,
-      request: () =>
-          _dio.post(uri, data: body, options: Options(headers: headers ?? _mainHeaders)),
+      request: () => _dio.post(uri, data: body, cancelToken: _cancelToken),
     );
   }
 
-  Future<Response> putData(String uri, dynamic body,
-      {Map<String, String>? headers}) async {
+  Future<Response> putData(String uri, dynamic body) async {
     return _handleRequest(
       uri,
-      request: () =>
-          _dio.put(uri, data: body, options: Options(headers: headers ?? _mainHeaders)),
+      request: () => _dio.put(uri, data: body, cancelToken: _cancelToken),
     );
   }
 
-  Future<Response> patchData(String uri, dynamic body,
-      {Map<String, String>? headers}) async {
+  Future<Response> patchData(String uri, dynamic body) async {
     return _handleRequest(
       uri,
-      request: () =>
-          _dio.patch(uri, data: body, options: Options(headers: headers ?? _mainHeaders)),
+      request: () => _dio.patch(uri, data: body, cancelToken: _cancelToken),
     );
   }
 
-  Future<Response> deleteData(String uri,
-      {Map<String, String>? headers}) async {
+  Future<Response> deleteData(String uri) async {
     return _handleRequest(
       uri,
-      request: () => _dio.delete(uri, options: Options(headers: headers ?? _mainHeaders)),
+      request: () => _dio.delete(uri, cancelToken: _cancelToken),
     );
   }
 
@@ -99,15 +94,16 @@ class RestService extends GetxService {
     return handleResponse(response);
   }
 
-  void logApiCall(String uri, {Map<String, String>? headers}) {
+  void logApiCall(String uri, {dynamic headers, dynamic body}) {
     if (kDebugMode) {
-      print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders}');
+      print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders} \nBody: $body');
     }
   }
 
   void logError(dynamic e) {
     if (kDebugMode) {
       print("Error on request: $e");
+      print("Error Response: ${e.response?.data}");
     }
   }
 
