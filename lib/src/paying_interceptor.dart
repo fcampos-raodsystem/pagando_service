@@ -43,9 +43,9 @@ class PayingInterceptor extends Interceptor {
         type: DioExceptionType.connectionError,
         message: noInternetMessage,
       ));
+    } else {
+      super.onRequest(options, handler);
     }
-
-    super.onRequest(options, handler);
   }
 
   @override
