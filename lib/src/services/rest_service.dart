@@ -107,7 +107,6 @@ class RestService extends GetxService {
       if (e.response != null) {
         print(e.response.data);
         print(e.response.headers);
-        print(e.response.requestOptions);
       } else {
         // Something happened in setting up or sending the request that triggered an Error
         print(e.requestOptions);
