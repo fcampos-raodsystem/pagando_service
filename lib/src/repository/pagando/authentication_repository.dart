@@ -4,16 +4,12 @@ abstract class AuthenticationRepositoryImplement {
   Future<UserSessions> getUserSession(String firebaseToken);
 }
 
-class AuthenticationRepository implements AuthenticationRepositoryImplement {
-  final RestService _restService;
-
-  AuthenticationRepository({
-    required RestService restService,
-  }) : _restService = restService;
+class AuthenticationRepository extends RestService implements AuthenticationRepositoryImplement {
+  AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   @override
   Future<UserSessions> getUserSession(String firebaseToken) async {
-    final response = await _restService.getData(
+    final response = await getData(
       '${Constants.userSessions}?fbt=$firebaseToken',
     );
 
