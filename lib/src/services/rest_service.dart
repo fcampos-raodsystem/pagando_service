@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:paying_service/service.dart';
 
 const timeoutInSeconds = 30;
@@ -92,14 +94,8 @@ class RestService extends GetxService {
     required Future<Response> Function() request,
     dynamic body,
   }) async {
-    try {
-      logApiCall(uri, body: body);
-      final response = await request();
-      return handleResponse(response);
-    } catch (e) {
-      logError(e);
-      rethrow;
-    }
+    logApiCall(uri, body: body);
+    return await request();
   }
 
   void logApiCall(String uri, {dynamic body}) {
@@ -112,18 +108,12 @@ class RestService extends GetxService {
     if (kDebugMode) {
       if (e.response != null) {
         print('Error Response: ${e.response.data}');
-        print('Error Headers ${e.response.headers}');
-        print('Error Options ${e.response.requestOptions}');
+        print('Error Headers ${e.response.headers.jsify()}');
+        print('Error Options ${e.response.requestOptions.jsify()}');
       } else {
-        // Something happened in setting up or sending the request that triggered an Error
-        print(e.requestOptions);
-        print(e.message);
+        print(e.jsify());
       }
     }
-  }
-
-  Response<dynamic> handleResponse(Response response) {
-    return response;
   }
 
   void cancelRequest() {

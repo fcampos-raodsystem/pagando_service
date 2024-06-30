@@ -9,18 +9,27 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
 
   @override
   Future<UserSessions> getUserSession(String firebaseToken) async {
-    final response = await getData(
-      '${Constants.userSessions}?fbt=$firebaseToken',
-    );
+    try {
+      final response = await getData(
+        '${Constants.userSessions}?fbt=$firebaseToken',
+      );
 
-    if (response.statusCode != 200 || response.statusCode != 500) {
+      return GetSessionSuccess(userSessionModel: UserSessionModel.fromJson(response.data));
+    } on DioException catch (e) {
+      if (kDebugMode) {
+        logError(e);
+      }
       return GetSessionError(failure: HttpRequestFailure.notFound);
+    } on SocketException catch (e) {
+      if (kDebugMode) {
+        logError(e);
+      }
+      return GetSessionError(failure: HttpRequestFailure.network);
+    } catch (e) {
+      if (kDebugMode) {
+        logError(e);
+      }
+      return GetSessionError(failure: HttpRequestFailure.local);
     }
-
-    if (response.statusCode == 500) {
-      return GetSessionError(failure: HttpRequestFailure.server);
-    }
-
-    return GetSessionSuccess(userSessionModel: UserSessionModel.fromJson(response.data));
   }
 }
