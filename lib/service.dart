@@ -9,8 +9,18 @@ export 'package:flutter/foundation.dart';
 export 'package:flutter_image_compress/flutter_image_compress.dart';
 export 'package:get/get.dart' hide Response, FormData, MultipartFile;
 export 'package:dio/dio.dart';
-export 'package:paying_service/src/constants.dart';
-export 'package:paying_service/src/paying_interceptor.dart';
+export 'package:freezed_annotation/freezed_annotation.dart';
+
+export 'package:paying_service/src/services/rest_service.dart';
+
+export 'package:paying_service/src/failures/http_request_failure.dart';
+
+export 'package:paying_service/src/utils/constants.dart';
+export 'package:paying_service/src/utils/paying_interceptor.dart';
+export 'package:paying_service/src/utils/either.dart';
+
+export 'package:paying_service/src/results/user_sessions.dart';
+
 export 'package:paying_service/src/model/body/checkout/imagen.dart';
 export 'package:paying_service/src/model/body/checkout/product.dart';
 export 'package:paying_service/src/model/body/pagando/balance.dart';
@@ -23,6 +33,7 @@ export 'package:paying_service/src/model/body/pagando/secure_config.dart';
 export 'package:paying_service/src/model/body/pagando/session.dart';
 export 'package:paying_service/src/model/body/pagando/tokens.dart';
 export 'package:paying_service/src/model/body/pagando/user.dart';
+
 export 'package:paying_service/src/model/response/pagando/auth_login_model.dart';
 export 'package:paying_service/src/model/response/pagando/charges_model.dart';
 export 'package:paying_service/src/model/response/pagando/config_model.dart';
@@ -48,6 +59,7 @@ export 'package:paying_service/src/model/response/pagando/user_model.dart';
 export 'package:paying_service/src/model/response/pagando/user_session_model.dart';
 export 'package:paying_service/src/model/response/pagando/verify_model.dart';
 export 'package:paying_service/src/model/response/pagando/withdraw_model.dart';
+
 export 'package:paying_service/src/repository/checkout/links_repository.dart';
 export 'package:paying_service/src/repository/checkout/products_repository.dart';
 export 'package:paying_service/src/repository/pagando/authentication_repository.dart';
@@ -61,4 +73,3 @@ export 'package:paying_service/src/repository/pagando/profile_repository.dart';
 export 'package:paying_service/src/repository/pagando/security_repository.dart';
 export 'package:paying_service/src/repository/pagando/send_repository.dart';
 export 'package:paying_service/src/repository/pagando/splash_repository.dart';
-export 'package:paying_service/src/rest_service.dart';

@@ -1,32 +1,30 @@
 import 'package:paying_service/service.dart';
 
-class RestService extends GetXState {
+const timeoutInSeconds = 30;
+
+class RestService extends GetxService {
+  final bool isDev;
+  final String appBaseDevUrl;
+  final String appBaseUrl;
+  final Dio _dio;
+  late CancelToken _cancelToken = CancelToken();
+  static Map<String, String>? _mainHeaders;
+
   RestService({
     required this.appBaseUrl,
     required this.appBaseDevUrl,
     required this.isDev,
-  }) {
-    _dio = Dio(BaseOptions(
-      baseUrl: isDev ? appBaseDevUrl : appBaseUrl,
-      sendTimeout: Duration(seconds: timeoutInSeconds),
-      receiveTimeout: Duration(seconds: timeoutInSeconds),
-      connectTimeout: Duration(seconds: timeoutInSeconds),
-      followRedirects: false,
-      contentType: 'application/json',
-    ));
-
+  }) : _dio = Dio(BaseOptions(
+          baseUrl: isDev ? appBaseDevUrl : appBaseUrl,
+          sendTimeout: Duration(seconds: timeoutInSeconds),
+          receiveTimeout: Duration(seconds: timeoutInSeconds),
+          connectTimeout: Duration(seconds: timeoutInSeconds),
+          followRedirects: false,
+          contentType: 'application/json',
+        )) {
     _dio.interceptors.add(PayingInterceptor());
     updateHeader(null);
   }
-
-  late Dio _dio;
-  CancelToken _cancelToken = CancelToken();
-
-  final bool isDev;
-  final String appBaseDevUrl;
-  final String appBaseUrl;
-  final int timeoutInSeconds = 30;
-  static Map<String, String>? _mainHeaders;
 
   Map<String, String>? updateHeader(String? token, {bool setHeader = true}) {
     late Map<String, String> header = {};
@@ -62,6 +60,7 @@ class RestService extends GetXState {
     return _handleRequest(
       uri,
       request: () => _dio.post(uri, data: body, cancelToken: _cancelToken),
+      body: body,
     );
   }
 
@@ -69,6 +68,7 @@ class RestService extends GetXState {
     return _handleRequest(
       uri,
       request: () => _dio.put(uri, data: body, cancelToken: _cancelToken),
+      body: body,
     );
   }
 
@@ -76,6 +76,7 @@ class RestService extends GetXState {
     return _handleRequest(
       uri,
       request: () => _dio.patch(uri, data: body, cancelToken: _cancelToken),
+      body: body,
     );
   }
 
@@ -89,21 +90,35 @@ class RestService extends GetXState {
   Future<Response> _handleRequest(
     String uri, {
     required Future<Response> Function() request,
+    dynamic body,
   }) async {
-    final response = await request();
-    return handleResponse(response);
+    try {
+      logApiCall(uri, body: body);
+      final response = await request();
+      return handleResponse(response);
+    } catch (e) {
+      logError(e);
+      rethrow;
+    }
   }
 
-  void logApiCall(String uri, {dynamic headers, dynamic body}) {
+  void logApiCall(String uri, {dynamic body}) {
     if (kDebugMode) {
-      print('====> API Call: $uri\nHeader: ${headers ?? _mainHeaders} \nBody: $body');
+      print('====> API Call: $uri\nHeader: ${_mainHeaders} \nBody: $body');
     }
   }
 
   void logError(dynamic e) {
     if (kDebugMode) {
-      print("Error on request: $e");
-      print("Error Response: ${e.response?.data}");
+      if (e.response != null) {
+        print('Error Response: ${e.response.data}');
+        print('Error Headers ${e.response.headers}');
+        print('Error Options ${e.response.requestOptions}');
+      } else {
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
+      }
     }
   }
 
