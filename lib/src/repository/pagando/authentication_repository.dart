@@ -19,7 +19,8 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
       if (kDebugMode) {
         logError(e);
       }
-      return GetSessionError(failure: HttpRequestFailure.notFound);
+      if(e.response?.statusCode == 404) return GetSessionError(failure: HttpRequestFailure.notFound);
+      return GetSessionError(failure: HttpRequestFailure.server);
     } on SocketException catch (e) {
       if (kDebugMode) {
         logError(e);
