@@ -21,3 +21,24 @@ class RefreshTokenFailure extends Authentication {
   RefreshTokenFailure({required this.failure});
   final HttpRequestFailure failure;
 }
+
+class LoginSuccess extends Authentication {
+  LoginSuccess({required this.authLoginModel});
+  final AuthLoginModel authLoginModel;
+}
+
+class LoginFailure extends Authentication {
+  final HttpRequestFailure failure;
+  final String? message;
+  LoginFailure({required this.failure, this.message});
+}
+
+class LogoutSuccess extends Authentication {
+  LogoutSuccess({required this.success});
+  final bool success;
+}
+
+class LogoutFailure extends Authentication {
+  LogoutFailure({required this.failure});
+  final HttpRequestFailure failure;
+}

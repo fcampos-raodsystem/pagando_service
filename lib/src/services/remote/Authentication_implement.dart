@@ -1,29 +1,29 @@
 import 'package:paying_service/service.dart';
 
-typedef PostVerifyFuture = Future<Either<HttpRequestFailure, VerifyModel>>;
-typedef PostResfreshFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
-typedef PostLoginWebFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
-typedef PostLoginFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
-typedef PostLogoutFuture = Future<Either<HttpRequestFailure, bool>>;
+typedef postVerifyFuture = Future<Either<HttpRequestFailure, VerifyModel>>;
+typedef postResfreshFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
+typedef postLoginWebFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
+typedef postLoginFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
+typedef postLogoutFuture = Future<Either<HttpRequestFailure, bool>>;
 
 abstract class AuthenticationImplement {
-  PostVerifyFuture PostVerify(String accessToken, String refreshToken);
-  PostResfreshFuture PostResfresh(String refreshToken);
-  PostLoginWebFuture PostLoginWeb(
-    String phoneOrEmail,
+  postVerifyFuture PostVerify({required String accessToken, required String refreshToken});
+  postResfreshFuture PostResfresh({required String refreshToken});
+  postLoginWebFuture PostLoginWeb({
+    required String phoneOrEmail,
     String? password,
     String? opt,
-  );
-  PostLoginFuture PostLogin(
-    String phoneOrEmail,
+  });
+  postLoginFuture PostLogin({
+    required String phoneOrEmail,
     String? password,
     String? opt,
-    String firebaseToken,
-    String deviceBrand,
-    String deviceOS,
-    String deviceModel,
-    String long,
-    String lat,
-  );
-  PostLogoutFuture PostLogout(String accessToken);
+    required String firebaseToken,
+    required String deviceBrand,
+    required String deviceOS,
+    required String deviceModel,
+    required String long,
+    required String lat,
+  });
+  postLogoutFuture PostLogout({required String accessToken, required String refreshToken});
 }

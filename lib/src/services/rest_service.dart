@@ -92,8 +92,19 @@ class RestService extends GetxService {
     required Future<Response> Function() request,
     dynamic body,
   }) async {
-    logApiCall(uri, body: body);
-    return await request();
+    try {
+      logApiCall(uri, body: body);
+      return await request();
+    } on DioException catch (e) {
+      logError(e);
+      rethrow;
+    } on SocketException catch (e) {
+      logError(e);
+      rethrow;
+    } catch (e) {
+      logError(e);
+      rethrow;
+    }
   }
 
   void logApiCall(String uri, {dynamic body}) {
