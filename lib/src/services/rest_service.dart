@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:paying_service/service.dart';
 
 const timeoutInSeconds = 30;
@@ -108,8 +106,7 @@ class RestService extends GetxService {
     if (kDebugMode) {
       if (e.response != null) {
         print('Error Response: ${e.response.data}');
-        print('Error Headers ${e.response.headers.jsify()}');
-        print('Error Options ${e.response.requestOptions.jsify()}');
+        print('Error Options ${jsonEncode(e.response.requestOptions)}');
       } else {
         print(e.jsify());
       }
