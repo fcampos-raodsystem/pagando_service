@@ -105,10 +105,13 @@ class RestService extends GetxService {
   void logError(dynamic e) {
     if (kDebugMode) {
       if (e.response != null) {
-        print('Error Response: ${e.response.data}');
-        print('Error Options ${jsonEncode(e.response.requestOptions)}');
+        print(e.response.data);
+        print(e.response.headers);
+        print(e.response.requestOptions);
       } else {
-        print(e.jsify());
+        // Something happened in setting up or sending the request that triggered an Error
+        print(e.requestOptions);
+        print(e.message);
       }
     }
   }
