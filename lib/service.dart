@@ -12,6 +12,7 @@ export 'package:dio/dio.dart';
 export 'package:freezed_annotation/freezed_annotation.dart';
 
 export 'package:paying_service/src/services/rest_service.dart';
+export 'package:paying_service/src/services/remote/user_session_implement.dart';
 
 export 'package:paying_service/src/failures/http_request_failure.dart';
 
