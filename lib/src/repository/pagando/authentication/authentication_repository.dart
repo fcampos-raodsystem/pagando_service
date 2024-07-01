@@ -172,7 +172,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
         Constants.persons,
         {
           'dni': dni,
-          'dniType': dniType,
+          'dniTypePrefix': dniType,
         },
       );
 
@@ -186,7 +186,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
 
       return Either.badRequest(PostPersonFailure(
         failure: error,
-        message: e.response?.data,
+        message: e.response?.data.toString(),
       ));
     } on SocketException {
       return Either.badRequest(PostPersonFailure(
