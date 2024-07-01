@@ -32,7 +32,7 @@ class DataPersonModel {
       secondName: json['secondName'].toString(),
       dni: json['dni'].toString(),
       dniType: DniType.fromJson(json['dniType'] as Map<String, dynamic>),
-      user: json['user'] ? User.fromJson(json['user'] as Map<String, dynamic>) : null,
+      user: json['user'] != null ? User.fromJson(json['user'] as Map<String, dynamic>) : null,
     );
   }
 
