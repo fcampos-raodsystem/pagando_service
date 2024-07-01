@@ -166,8 +166,38 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   }
 
   @override
-  Future<Persons> postPersons({required String dni, required String dniType}) {
-    // TODO: implement postPersons
-    throw UnimplementedError();
+  PostPersonsFuture postPersons({required String dni, required String dniType}) async {
+    try {
+      final response = await postData(
+        Constants.persons,
+        {
+          'dni': dni,
+          'dniType': dniType,
+        },
+      );
+
+      return Either.goodRequest(PersonModel.fromJson(response.data));
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(PostPersonFailure(
+        failure: error,
+        message: e.response?.data,
+      ));
+    } on SocketException {
+      return Either.badRequest(PostPersonFailure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
+    } catch (_) {
+      return Either.badRequest(PostPersonFailure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
+    }
   }
 }

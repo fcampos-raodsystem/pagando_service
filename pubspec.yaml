@@ -1,4 +1,4 @@
-name: paying_service
+mame: paying_service
 description: Pagando API Service
 version: 0.1.5
 publish_to: none
@@ -23,4 +23,4 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.5.2
   mocktail: ^1.0.3
-  very_good_analysis: ^5.1.0
+  flutter_lints: ^3.0.1
