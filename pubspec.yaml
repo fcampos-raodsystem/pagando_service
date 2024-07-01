@@ -1,8 +1,7 @@
-mame: paying_service
+name: paying_service
 description: Pagando API Service
 version: 0.1.5
 publish_to: none
-
 environment:
   sdk: "^3.3.0"
   flutter: "^3.22.2"
@@ -10,6 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   flutter_image_compress: ^2.2.0
   get: ^4.6.6
   decimal: ^3.0.2
@@ -18,9 +18,11 @@ dependencies:
   freezed_annotation: ^2.4.1
 
 dev_dependencies:
-  build_runner: ^2.4.11
-  flutter_test:
+flutter_test:
     sdk: flutter
-  freezed: ^2.5.2
-  mocktail: ^1.0.3
-  flutter_lints: ^3.0.1
+  
+build_runner: ^2.4.11
+  
+freezed: ^2.5.2
+mocktail: ^1.0.3
+flutter_lints: ^3.0.1

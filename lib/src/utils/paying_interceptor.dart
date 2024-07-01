@@ -47,8 +47,11 @@ class PayingInterceptor extends Interceptor {
 
   @override
   Future onError(DioException err, ErrorInterceptorHandler handler) async {
-    print('====> ERROR[${err.response?.statusCode}]');
-    print('====> PATH: ${err.requestOptions.path}');
+    if (kDebugMode) {
+      print('====> ERROR[${err.response?.statusCode}]');
+      print('====> PATH: ${err.requestOptions.path}');
+    }
+
     super.onError(err, handler);
   }
 }
