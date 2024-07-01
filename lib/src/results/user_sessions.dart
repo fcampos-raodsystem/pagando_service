@@ -2,16 +2,16 @@ import 'package:paying_service/service.dart';
 
 abstract class UserSessions {}
 
-class GetSessionSuccess extends UserSessions {
-  GetSessionSuccess({
+class PostSessionSuccess extends UserSessions {
+  PostSessionSuccess({
     required this.userSessionModel,
   });
 
   final UserSessionModel userSessionModel;
 }
 
-class GetSessionError extends UserSessions {
-  GetSessionError({
+class PostSessionError extends UserSessions {
+  PostSessionError({
     required this.failure,
   });
 

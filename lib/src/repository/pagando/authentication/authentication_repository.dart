@@ -4,20 +4,20 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
   @override
-  Future<UserSessions> getUserSession({required String firebaseToken}) async {
+  PostUserSessionsFuture postUserSession({required String firebaseToken}) async {
     try {
       final response = await getData(
         '${Constants.userSessions}?fbt=$firebaseToken',
       );
 
-      return GetSessionSuccess(userSessionModel: UserSessionModel.fromJson(response.data));
+      return Either.goodRequest(PostSessionSuccess(userSessionModel: UserSessionModel.fromJson(response.data)));
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return GetSessionError(failure: HttpRequestFailure.notFound);
-      return GetSessionError(failure: HttpRequestFailure.server);
+      if (e.response?.statusCode == 404) return Either.badRequest(PostSessionError(failure: HttpRequestFailure.notFound));
+      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.server));
     } on SocketException {
-      return GetSessionError(failure: HttpRequestFailure.network);
+      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.network));
     } catch (_) {
-      return GetSessionError(failure: HttpRequestFailure.local);
+      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.local));
     }
   }
 
@@ -163,5 +163,11 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
     } catch (_) {
       return VerifyTokenFailure(failure: HttpRequestFailure.local);
     }
+  }
+
+  @override
+  Future<Persons> postPersons({required String dni, required String dniType}) {
+    // TODO: implement postPersons
+    throw UnimplementedError();
   }
 }

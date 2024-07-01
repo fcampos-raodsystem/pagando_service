@@ -13,6 +13,8 @@ export 'package:freezed_annotation/freezed_annotation.dart';
 
 export 'package:paying_service/src/services/rest_service.dart';
 export 'package:paying_service/src/services/remote/user_session_implement.dart';
+export 'package:paying_service/src/services/remote/persons_implement.dart';
+export 'package:paying_service/src/services/remote/authentication_implement.dart';
 
 export 'package:paying_service/src/failures/http_request_failure.dart';
 
@@ -22,6 +24,7 @@ export 'package:paying_service/src/utils/either.dart';
 
 export 'package:paying_service/src/results/user_sessions.dart';
 export 'package:paying_service/src/results/authetication.dart';
+export 'package:paying_service/src/results/persons.dart';
 
 export 'package:paying_service/src/model/body/checkout/imagen.dart';
 export 'package:paying_service/src/model/body/checkout/product.dart';

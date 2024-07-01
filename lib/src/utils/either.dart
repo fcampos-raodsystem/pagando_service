@@ -4,6 +4,6 @@ part 'either.freezed.dart';
 
 @freezed
 class Either<L, R> with _$Either<L, R> {
-  factory Either.left(L value) = _Left;
-  factory Either.right(R value) = _Right;
+  factory Either.badRequest(L value) = _Left;
+  factory Either.goodRequest(R value) = _Right;
 }

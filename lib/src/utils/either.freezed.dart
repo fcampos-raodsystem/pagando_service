@@ -19,39 +19,39 @@ mixin _$Either<L, R> {
   Object? get value => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(L value) left,
-    required TResult Function(R value) right,
+    required TResult Function(L value) badRequest,
+    required TResult Function(R value) goodRequest,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(L value)? left,
-    TResult? Function(R value)? right,
+    TResult? Function(L value)? badRequest,
+    TResult? Function(R value)? goodRequest,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(L value)? left,
-    TResult Function(R value)? right,
+    TResult Function(L value)? badRequest,
+    TResult Function(R value)? goodRequest,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Left<L, R> value) left,
-    required TResult Function(_Right<L, R> value) right,
+    required TResult Function(_Left<L, R> value) badRequest,
+    required TResult Function(_Right<L, R> value) goodRequest,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Left<L, R> value)? left,
-    TResult? Function(_Right<L, R> value)? right,
+    TResult? Function(_Left<L, R> value)? badRequest,
+    TResult? Function(_Right<L, R> value)? goodRequest,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Left<L, R> value)? left,
-    TResult Function(_Right<L, R> value)? right,
+    TResult Function(_Left<L, R> value)? badRequest,
+    TResult Function(_Right<L, R> value)? goodRequest,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -116,7 +116,7 @@ class _$LeftImpl<L, R> implements _Left<L, R> {
 
   @override
   String toString() {
-    return 'Either<$L, $R>.left(value: $value)';
+    return 'Either<$L, $R>.badRequest(value: $value)';
   }
 
   @override
@@ -140,30 +140,30 @@ class _$LeftImpl<L, R> implements _Left<L, R> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(L value) left,
-    required TResult Function(R value) right,
+    required TResult Function(L value) badRequest,
+    required TResult Function(R value) goodRequest,
   }) {
-    return left(value);
+    return badRequest(value);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(L value)? left,
-    TResult? Function(R value)? right,
+    TResult? Function(L value)? badRequest,
+    TResult? Function(R value)? goodRequest,
   }) {
-    return left?.call(value);
+    return badRequest?.call(value);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(L value)? left,
-    TResult Function(R value)? right,
+    TResult Function(L value)? badRequest,
+    TResult Function(R value)? goodRequest,
     required TResult orElse(),
   }) {
-    if (left != null) {
-      return left(value);
+    if (badRequest != null) {
+      return badRequest(value);
     }
     return orElse();
   }
@@ -171,30 +171,30 @@ class _$LeftImpl<L, R> implements _Left<L, R> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Left<L, R> value) left,
-    required TResult Function(_Right<L, R> value) right,
+    required TResult Function(_Left<L, R> value) badRequest,
+    required TResult Function(_Right<L, R> value) goodRequest,
   }) {
-    return left(this);
+    return badRequest(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Left<L, R> value)? left,
-    TResult? Function(_Right<L, R> value)? right,
+    TResult? Function(_Left<L, R> value)? badRequest,
+    TResult? Function(_Right<L, R> value)? goodRequest,
   }) {
-    return left?.call(this);
+    return badRequest?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Left<L, R> value)? left,
-    TResult Function(_Right<L, R> value)? right,
+    TResult Function(_Left<L, R> value)? badRequest,
+    TResult Function(_Right<L, R> value)? goodRequest,
     required TResult orElse(),
   }) {
-    if (left != null) {
-      return left(this);
+    if (badRequest != null) {
+      return badRequest(this);
     }
     return orElse();
   }
@@ -251,7 +251,7 @@ class _$RightImpl<L, R> implements _Right<L, R> {
 
   @override
   String toString() {
-    return 'Either<$L, $R>.right(value: $value)';
+    return 'Either<$L, $R>.goodRequest(value: $value)';
   }
 
   @override
@@ -275,30 +275,30 @@ class _$RightImpl<L, R> implements _Right<L, R> {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(L value) left,
-    required TResult Function(R value) right,
+    required TResult Function(L value) badRequest,
+    required TResult Function(R value) goodRequest,
   }) {
-    return right(value);
+    return goodRequest(value);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(L value)? left,
-    TResult? Function(R value)? right,
+    TResult? Function(L value)? badRequest,
+    TResult? Function(R value)? goodRequest,
   }) {
-    return right?.call(value);
+    return goodRequest?.call(value);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(L value)? left,
-    TResult Function(R value)? right,
+    TResult Function(L value)? badRequest,
+    TResult Function(R value)? goodRequest,
     required TResult orElse(),
   }) {
-    if (right != null) {
-      return right(value);
+    if (goodRequest != null) {
+      return goodRequest(value);
     }
     return orElse();
   }
@@ -306,30 +306,30 @@ class _$RightImpl<L, R> implements _Right<L, R> {
   @override
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
-    required TResult Function(_Left<L, R> value) left,
-    required TResult Function(_Right<L, R> value) right,
+    required TResult Function(_Left<L, R> value) badRequest,
+    required TResult Function(_Right<L, R> value) goodRequest,
   }) {
-    return right(this);
+    return goodRequest(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Left<L, R> value)? left,
-    TResult? Function(_Right<L, R> value)? right,
+    TResult? Function(_Left<L, R> value)? badRequest,
+    TResult? Function(_Right<L, R> value)? goodRequest,
   }) {
-    return right?.call(this);
+    return goodRequest?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Left<L, R> value)? left,
-    TResult Function(_Right<L, R> value)? right,
+    TResult Function(_Left<L, R> value)? badRequest,
+    TResult Function(_Right<L, R> value)? goodRequest,
     required TResult orElse(),
   }) {
-    if (right != null) {
-      return right(this);
+    if (goodRequest != null) {
+      return goodRequest(this);
     }
     return orElse();
   }

@@ -1,7 +1,8 @@
 import 'package:paying_service/service.dart';
 
+
 abstract class AuthenticationRepositoryImplement {
-  Future<UserSessions> getUserSession({required String firebaseToken});
+  PostUserSessionsFuture postUserSession({required String firebaseToken});
 
   Future<Authentication> postVerifyToken({required String accessToken, required String refreshToken});
 
@@ -25,5 +26,10 @@ abstract class AuthenticationRepositoryImplement {
     required String deviceModel,
     required String long,
     required String lat,
+  });
+
+  Future<Persons> postPersons({
+    required String dni,
+    required String dniType,
   });
 }

@@ -1,7 +1,7 @@
 import 'package:paying_service/service.dart';
 
-typedef GetUserSessionsFuture = Future<Either<HttpRequestFailure, UserSessionModel>>;
+typedef PostUserSessionsFuture = Future<Either<PostSessionError, PostSessionSuccess>>;
 
 abstract class UserSessionImplement {
-  GetUserSessionsFuture postUserSessions(String firebaseToken);
+  PostUserSessionsFuture postUserSessions({required String firebaseToken});
 }
