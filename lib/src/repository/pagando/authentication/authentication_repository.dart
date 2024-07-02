@@ -22,7 +22,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   }
 
   @override
-  Future<Authentication> postLogin({
+  PostLoginFuture postLogin({
     required String phoneOrEmail,
     String? password,
     String? opt,
@@ -48,51 +48,32 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
           'lat': lat,
         },
       );
-      return LoginSuccess(authLoginModel: AuthLoginModel.fromJson(response.data));
+      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return LoginFailure(failure: HttpRequestFailure.notFound, message: e.response?.data);
-      if (e.response?.statusCode == 401) return LoginFailure(failure: HttpRequestFailure.unauthorized, message: e.response?.data);
-      if (e.response?.statusCode == 400) return LoginFailure(failure: HttpRequestFailure.badRequest, message: e.response?.data);
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
-      return LoginFailure(failure: HttpRequestFailure.server, message: "Server Error");
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response?.data,
+      ));
     } on SocketException {
-      return LoginFailure(failure: HttpRequestFailure.network, message: "No Internet Connection");
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
     } catch (_) {
-      return LoginFailure(failure: HttpRequestFailure.local, message: "Local Error");
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
     }
   }
 
   @override
-  Future<Authentication> postLoginWeb({
-    required String phoneOrEmail,
-    String? password,
-    String? opt,
-  }) async {
-    try {
-      final response = await postData(
-        Constants.authLogin,
-        {
-          'phoneOrEmail': phoneOrEmail,
-          'password': password,
-          'opt': opt,
-        },
-      );
-      return LoginSuccess(authLoginModel: AuthLoginModel.fromJson(response.data));
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return LoginFailure(failure: HttpRequestFailure.notFound, message: e.response?.data);
-      if (e.response?.statusCode == 401) return LoginFailure(failure: HttpRequestFailure.unauthorized, message: e.response?.data);
-      if (e.response?.statusCode == 400) return LoginFailure(failure: HttpRequestFailure.badRequest, message: e.response?.data);
-
-      return LoginFailure(failure: HttpRequestFailure.server, message: "Server Error");
-    } on SocketException {
-      return LoginFailure(failure: HttpRequestFailure.network, message: "No Internet Connection");
-    } catch (_) {
-      return LoginFailure(failure: HttpRequestFailure.local, message: "Local Error");
-    }
-  }
-
-  @override
-  Future<Authentication> postLogout({required String accessToken, required String refreshToken}) async {
+  PostLogoutFuture postLogout({required String accessToken, required String refreshToken}) async {
     try {
       await postData(
         Constants.authLogout,
@@ -102,17 +83,28 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
         },
       );
 
-      return LogoutSuccess(success: true);
+      return Either.goodRequest(true);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return LogoutFailure(failure: HttpRequestFailure.notFound);
-      if (e.response?.statusCode == 401) return LogoutFailure(failure: HttpRequestFailure.unauthorized);
-      if (e.response?.statusCode == 400) return LogoutFailure(failure: HttpRequestFailure.badRequest);
+      HttpRequestFailure error = HttpRequestFailure.server;
 
-      return LogoutFailure(failure: HttpRequestFailure.server);
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response?.data,
+      ));
     } on SocketException {
-      return LoginFailure(failure: HttpRequestFailure.network);
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: 'Error de conexión',
+      ));
     } catch (_) {
-      return LoginFailure(failure: HttpRequestFailure.local);
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: 'Error local',
+      ));
     }
   }
 
@@ -195,6 +187,41 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
       ));
     } catch (_) {
       return Either.badRequest(PostPersonFailure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
+    }
+  }
+
+  @override
+  PostLoginFuture postLoginWeb({required String phoneOrEmail, String? password, String? opt}) async {
+    try {
+      final response = await postData(
+        Constants.authLogin,
+        {
+          'phoneOrEmail': phoneOrEmail,
+          'password': password,
+          'opt': opt,
+        },
+      );
+      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response?.data,
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
         failure: HttpRequestFailure.local,
         message: "Error local",
       ));

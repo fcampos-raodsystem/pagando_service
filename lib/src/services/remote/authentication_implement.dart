@@ -1,20 +1,20 @@
 import 'package:paying_service/service.dart';
 
-typedef postVerifyFuture = Future<Either<HttpRequestFailure, VerifyModel>>;
-typedef postResfreshFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
-typedef postLoginWebFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
-typedef postLoginFuture = Future<Either<HttpRequestFailure, AuthLoginModel>>;
-typedef postLogoutFuture = Future<Either<HttpRequestFailure, bool>>;
+typedef postVerifyFuture = Future<Either<Failure, VerifyModel>>;
+typedef postResfreshFuture = Future<Either<Failure, AuthLoginModel>>;
+typedef PostLoginWebFuture = Future<Either<Failure, AuthLoginModel>>;
+typedef PostLoginFuture = Future<Either<Failure, AuthLoginModel>>;
+typedef PostLogoutFuture = Future<Either<Failure, bool>>;
 
 abstract class AuthenticationImplement {
-  postVerifyFuture PostVerify({required String accessToken, required String refreshToken});
+  postVerifyFuture postVerify({required String accessToken, required String refreshToken});
   postResfreshFuture PostResfresh({required String refreshToken});
-  postLoginWebFuture PostLoginWeb({
+  PostLoginWebFuture postLoginWeb({
     required String phoneOrEmail,
     String? password,
     String? opt,
   });
-  postLoginFuture PostLogin({
+  PostLoginFuture postLogin({
     required String phoneOrEmail,
     String? password,
     String? opt,
@@ -25,5 +25,5 @@ abstract class AuthenticationImplement {
     required String long,
     required String lat,
   });
-  postLogoutFuture PostLogout({required String accessToken, required String refreshToken});
+  PostLogoutFuture PostLogout({required String accessToken, required String refreshToken});
 }

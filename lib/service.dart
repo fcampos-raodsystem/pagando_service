@@ -25,6 +25,7 @@ export 'package:paying_service/src/utils/either.dart';
 export 'package:paying_service/src/results/user_sessions.dart';
 export 'package:paying_service/src/results/authetication.dart';
 export 'package:paying_service/src/results/persons.dart';
+export 'package:paying_service/src/results/general_result.dart';
 
 export 'package:paying_service/src/model/body/checkout/imagen.dart';
 export 'package:paying_service/src/model/body/checkout/product.dart';
