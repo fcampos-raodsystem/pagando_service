@@ -42,12 +42,14 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
           {
             'phoneOrEmail': phoneOrEmail,
             'password': password,
-            'fbt': firebaseToken,
-            'deviceBrand': deviceBrand,
-            'deviceOS': deviceOS,
-            'deviceModel': deviceModel,
-            'long': long,
-            'lat': lat,
+            'userSession': {
+              'fbt': firebaseToken,
+              'deviceBrand': deviceBrand,
+              'deviceOS': deviceOS,
+              'deviceModel': deviceModel,
+              'long': long,
+              'lat': lat,
+            }
           },
         );
       } else {
@@ -56,12 +58,14 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
           {
             'phoneOrEmail': phoneOrEmail,
             'opt': opt,
-            'fbt': firebaseToken,
-            'deviceBrand': deviceBrand,
-            'deviceOS': deviceOS,
-            'deviceModel': deviceModel,
-            'long': long,
-            'lat': lat,
+            'userSession': {
+              'fbt': firebaseToken,
+              'deviceBrand': deviceBrand,
+              'deviceOS': deviceOS,
+              'deviceModel': deviceModel,
+              'long': long,
+              'lat': lat,
+            }
           },
         );
       }
