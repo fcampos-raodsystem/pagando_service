@@ -256,7 +256,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   }
 
   @override
-  GetMeFuture getMe({required String accessToken}) async {
+  GetMeFuture getMe() async {
     try {
       final response = await getData(
         Constants.me,

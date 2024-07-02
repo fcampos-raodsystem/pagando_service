@@ -8,7 +8,7 @@ typedef PostLogoutFuture = Future<Either<Failure, bool>>;
 typedef GetMeFuture = Future<Either<Failure, MeModel>>;
 
 abstract class AuthenticationImplement {
-  GetMeFuture getMe({required String accessToken});
+  GetMeFuture getMe();
 
   postVerifyFuture postVerify({required String accessToken, required String refreshToken});
 

@@ -2,7 +2,7 @@ import 'package:paying_service/service.dart';
 
 abstract class AuthenticationRepositoryImplement {
 
-  GetMeFuture getMe({required String accessToken});
+  GetMeFuture getMe();
 
   PostPersonsFuture postPersons({required String dni, required String dniType});
 
