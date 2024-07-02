@@ -35,7 +35,19 @@ class MeModel {
 /// Person is a model class that contains the data of the person.
 class DataMeModel {
   /// Constructor for DataMeModel.
-  DataMeModel({this.id, this.email, this.pin, this.phone, this.verified, this.lastLogin, this.person, this.balance, this.secureConfig, this.profile, this.session});
+  DataMeModel({
+    this.id,
+    this.email,
+    this.pin,
+    this.phone,
+    this.verified,
+    this.lastLogin,
+    this.person,
+    this.balance,
+    this.secureConfig,
+    this.profile,
+    this.session,
+  });
 
   /// Constructor for DataMeModel from JSON.
   factory DataMeModel.fromJson(Map<String, dynamic> json) {
@@ -46,11 +58,11 @@ class DataMeModel {
       phone: json['phone'] != null ? json['phone'].toString() : '',
       verified: json['verified'] != null ? json['verified'] : false,
       lastLogin: json['lastLogin'] != null ? json['lastLogin'] : '',
-      person: json['person'] != null ? Person.fromJson(json['person']) : Person(),
-      balance: json['balance'] != null ? Balance.fromJson(json['balance']) : Balance(),
-      secureConfig: json['secureConfig'] != null ? SecureConfig.fromJson(json['secureConfig']) : SecureConfig(),
-      profile: json['profile'] != null ? Profile.fromJson(json['profile']) : Profile(id: '', securityKey: '', profileImage: ProfileImage(url: '')),
-      session: json['session'] != null ? Session.fromJson(json['session']) : Session(),
+      person: json['person'] != null ? Person.fromJson(json['person']) : null,
+      balance: json['balance'] != null ? Balance.fromJson(json['balance']) : null,
+      secureConfig: json['secureConfig'] != null ? SecureConfig.fromJson(json['secureConfig']) : null,
+      profile: json['profile'] != null ? Profile.fromJson(json['profile']) : null,
+      session: json['session'] != null ? Session.fromJson(json['session']) : null,
     );
   }
 
