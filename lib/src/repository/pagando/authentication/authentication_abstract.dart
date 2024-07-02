@@ -1,6 +1,9 @@
 import 'package:paying_service/service.dart';
 
 abstract class AuthenticationRepositoryImplement {
+
+  GetMeFuture getMe({required String accessToken});
+
   PostPersonsFuture postPersons({required String dni, required String dniType});
 
   PostUserSessionsFuture postUserSession({required String firebaseToken});

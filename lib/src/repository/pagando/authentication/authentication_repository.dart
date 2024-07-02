@@ -1,7 +1,5 @@
 import 'package:paying_service/service.dart';
 
-part 'post_login_function.dart';
-
 class AuthenticationRepository extends RestService implements AuthenticationRepositoryImplement {
   AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
@@ -254,6 +252,43 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
         failure: HttpRequestFailure.local,
         message: "Error local",
       ));
+    }
+  }
+
+  @override
+  GetMeFuture getMe({required String accessToken}) async {
+    try {
+      final response = await getData(
+        Constants.me,
+      );
+
+      return Either.goodRequest(MeModel.fromJson(response.data));
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401)
+        return Either.badRequest(
+          Failure(
+            failure: HttpRequestFailure.unauthorized,
+            message: 'No autorizado',
+          ),
+        );
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.server,
+        message: jsonEncode(e.response?.data),
+      ));
+    } on SocketException {
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.network,
+          message: "Error de conexión",
+        ),
+      );
+    } catch (_) {
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.local,
+          message: "Error local",
+        ),
+      );
     }
   }
 }
