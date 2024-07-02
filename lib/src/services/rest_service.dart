@@ -52,7 +52,11 @@ class RestService extends GetxService {
   Future<Response> getData(String uri) async {
     return _handleRequest(
       uri,
-      request: () => _dio.get(uri, cancelToken: _cancelToken),
+      request: () => _dio.get(
+        uri,
+        options: Options(headers: _mainHeaders),
+        cancelToken: _cancelToken,
+      ),
     );
   }
 
