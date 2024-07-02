@@ -37,37 +37,31 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
       late Response response;
 
       if (password != null) {
-        response = await postData(
-          Constants.authLogin,
-          {
-            'phoneOrEmail': phoneOrEmail,
-            'password': password,
-            'userSession': {
-              'fbt': firebaseToken,
-              'deviceBrand': deviceBrand,
-              'deviceOS': deviceOS,
-              'deviceModel': deviceModel,
-              'long': long,
-              'lat': lat,
-            }
-          },
-        );
+        response = await postData(Constants.authLogin, {
+          "phoneOrEmail": phoneOrEmail,
+          "password": password,
+          "userSession": {
+            "firebaseToken": firebaseToken,
+            "device": deviceBrand,
+            "so": deviceOS,
+            "model": deviceModel,
+            "long": long,
+            "lat": lat,
+          }
+        });
       } else {
-        response = await postData(
-          Constants.authLogin,
-          {
-            'phoneOrEmail': phoneOrEmail,
-            'opt': opt,
-            'userSession': {
-              'fbt': firebaseToken,
-              'deviceBrand': deviceBrand,
-              'deviceOS': deviceOS,
-              'deviceModel': deviceModel,
-              'long': long,
-              'lat': lat,
-            }
+        response = await postData(Constants.authLogin, {
+          "phoneOrEmail": phoneOrEmail,
+          "otpCode": opt,
+          "userSession": {
+            "firebaseToken": firebaseToken,
+            "device": deviceBrand,
+            "so": deviceOS,
+            "model": deviceModel,
+            "long": long,
+            "lat": lat,
           },
-        );
+        });
       }
 
       return Either.goodRequest(AuthLoginModel.fromJson(response.data));
