@@ -73,7 +73,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
 
       return Either.badRequest(Failure(
         failure: error,
-        message: e.response?.data,
+        message: e.response?.data ?? "",
       ));
     } on SocketException {
       return Either.badRequest(Failure(
