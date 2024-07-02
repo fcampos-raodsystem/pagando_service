@@ -59,7 +59,12 @@ class RestService extends GetxService {
   Future<Response> postData(String uri, dynamic body) async {
     return _handleRequest(
       uri,
-      request: () => _dio.post(uri, data: body, cancelToken: _cancelToken),
+      request: () => _dio.post(
+        uri,
+        data: body,
+        options: Options(headers: _mainHeaders),
+        cancelToken: _cancelToken,
+      ),
       body: body,
     );
   }
@@ -67,7 +72,12 @@ class RestService extends GetxService {
   Future<Response> putData(String uri, dynamic body) async {
     return _handleRequest(
       uri,
-      request: () => _dio.put(uri, data: body, cancelToken: _cancelToken),
+      request: () => _dio.put(
+        uri,
+        data: body,
+        options: Options(headers: _mainHeaders),
+        cancelToken: _cancelToken,
+      ),
       body: body,
     );
   }
@@ -75,7 +85,12 @@ class RestService extends GetxService {
   Future<Response> patchData(String uri, dynamic body) async {
     return _handleRequest(
       uri,
-      request: () => _dio.patch(uri, data: body, cancelToken: _cancelToken),
+      request: () => _dio.patch(
+        uri,
+        data: body,
+        options: Options(headers: _mainHeaders),
+        cancelToken: _cancelToken,
+      ),
       body: body,
     );
   }
@@ -83,7 +98,11 @@ class RestService extends GetxService {
   Future<Response> deleteData(String uri) async {
     return _handleRequest(
       uri,
-      request: () => _dio.delete(uri, cancelToken: _cancelToken),
+      request: () => _dio.delete(
+        uri,
+        options: Options(headers: _mainHeaders),
+        cancelToken: _cancelToken,
+      ),
     );
   }
 
