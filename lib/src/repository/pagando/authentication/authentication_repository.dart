@@ -1,5 +1,4 @@
 import 'package:paying_service/service.dart';
-import 'package:paying_service/src/results/general_result.dart';
 
 class AuthenticationRepository extends RestService implements AuthenticationRepositoryImplement {
   AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
