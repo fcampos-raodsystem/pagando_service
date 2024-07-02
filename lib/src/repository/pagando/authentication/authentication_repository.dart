@@ -1,5 +1,7 @@
 import 'package:paying_service/service.dart';
 
+part 'post_login_function.dart';
+
 class AuthenticationRepository extends RestService implements AuthenticationRepositoryImplement {
   AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
 
@@ -18,73 +20,6 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
       return Either.badRequest(PostSessionError(failure: HttpRequestFailure.network));
     } catch (_) {
       return Either.badRequest(PostSessionError(failure: HttpRequestFailure.local));
-    }
-  }
-
-  @override
-  PostLoginFuture postLogin({
-    required String phoneOrEmail,
-    String? password,
-    String? opt,
-    required String firebaseToken,
-    required String deviceBrand,
-    required String deviceOS,
-    required String deviceModel,
-    required String long,
-    required String lat,
-  }) async {
-    try {
-      late Response response;
-
-      if (password != null) {
-        response = await postData(Constants.authLogin, {
-          "phoneOrEmail": phoneOrEmail,
-          "password": password,
-          "userSession": {
-            "firebaseToken": firebaseToken,
-            "device": deviceBrand,
-            "so": deviceOS,
-            "model": deviceModel,
-            "long": long,
-            "lat": lat,
-          }
-        });
-      } else {
-        response = await postData(Constants.authLogin, {
-          "phoneOrEmail": phoneOrEmail,
-          "otpCode": opt,
-          "userSession": {
-            "firebaseToken": firebaseToken,
-            "device": deviceBrand,
-            "so": deviceOS,
-            "model": deviceModel,
-            "long": long,
-            "lat": lat,
-          },
-        });
-      }
-
-      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) error = HttpRequestFailure.unauthorized;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
     }
   }
 
@@ -230,6 +165,84 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
       return Either.badRequest(Failure(
         failure: error,
         message: e.response?.data,
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
+    }
+  }
+
+  @override
+  PostLoginFuture postLogin({
+    required String phoneOrEmail,
+    String? password,
+    String? opt,
+    required String firebaseToken,
+    required String deviceBrand,
+    required String deviceOS,
+    required String deviceModel,
+    required String long,
+    required String lat,
+  }) async {
+    try {
+      late Response response;
+
+      if (password != null) {
+        response = await postData(Constants.authLogin, {
+          "phoneOrEmail": phoneOrEmail,
+          "password": password,
+          "userSession": {
+            "firebaseToken": firebaseToken,
+            "device": deviceBrand,
+            "so": deviceOS,
+            "model": deviceModel,
+            "long": long,
+            "lat": lat,
+          }
+        });
+      } else {
+        response = await postData(Constants.authLogin, {
+          "phoneOrEmail": phoneOrEmail,
+          "otpCode": opt,
+          "userSession": {
+            "firebaseToken": firebaseToken,
+            "device": deviceBrand,
+            "so": deviceOS,
+            "model": deviceModel,
+            "long": long,
+            "lat": lat,
+          },
+        });
+      }
+
+      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) {
+        return Either.badRequest(Failure(
+          failure: HttpRequestFailure.unauthorized,
+          message: "Usuario ya tiene una session activa",
+        ));
+      }
+      if (e.response?.statusCode == 403) {
+        return Either.badRequest(Failure(
+          failure: HttpRequestFailure.unauthorized,
+          message: "Usuario o contraseña incorrectos",
+        ));
+      }
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "",
       ));
     } on SocketException {
       return Either.badRequest(Failure(
