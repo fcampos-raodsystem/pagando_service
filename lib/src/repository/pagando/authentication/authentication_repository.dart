@@ -1,4 +1,5 @@
 import 'package:paying_service/service.dart';
+import 'package:paying_service/src/results/general_result.dart';
 
 class AuthenticationRepository extends RestService implements AuthenticationRepositoryImplement {
   AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
@@ -58,7 +59,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   }
 
   @override
-  Future<Authentication> postRefreshToken({required String refreshToken}) async {
+  PostResfreshFuture postRefreshToken({required String refreshToken}) async {
     try {
       final response = await postData(
         Constants.refreshToken,
@@ -67,22 +68,36 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
         },
       );
 
-      return RefreshTokenSuccess(authLoginModel: AuthLoginModel.fromJson(response.data));
+      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return RefreshTokenFailure(failure: HttpRequestFailure.notFound);
-      if (e.response?.statusCode == 401) return RefreshTokenFailure(failure: HttpRequestFailure.unauthorized);
-      if (e.response?.statusCode == 400) return RefreshTokenFailure(failure: HttpRequestFailure.badRequest);
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
-      return RefreshTokenFailure(failure: HttpRequestFailure.server);
+      return Either.badRequest(
+        Failure(
+          failure: error,
+          message: jsonEncode(e.response?.data),
+        ),
+      );
     } on SocketException {
-      return RefreshTokenFailure(failure: HttpRequestFailure.network);
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.network,
+          message: "Error de conexión",
+        ),
+      );
     } catch (_) {
-      return RefreshTokenFailure(failure: HttpRequestFailure.local);
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
     }
   }
 
   @override
-  Future<Authentication> postVerifyToken({required String accessToken, required String refreshToken}) async {
+  PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken}) async {
     try {
       final response = await postData(
         Constants.verifyToken,
@@ -92,17 +107,33 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
         },
       );
 
-      return VerifyTokenSuccess(verifyModel: VerifyModel.fromJson(response.data));
+      return Either.goodRequest(VerifyModel.fromJson(response.data));
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return VerifyTokenFailure(failure: HttpRequestFailure.notFound);
-      if (e.response?.statusCode == 401) return VerifyTokenFailure(failure: HttpRequestFailure.unauthorized);
-      if (e.response?.statusCode == 400) return VerifyTokenFailure(failure: HttpRequestFailure.badRequest);
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
-      return VerifyTokenFailure(failure: HttpRequestFailure.server);
+      return Either.badRequest(
+        Failure(
+          failure: error,
+          message: jsonEncode(e.response?.data),
+        ),
+      );
     } on SocketException {
-      return VerifyTokenFailure(failure: HttpRequestFailure.network);
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.network,
+          message: "Error de conexión",
+        ),
+      );
     } catch (_) {
-      return VerifyTokenFailure(failure: HttpRequestFailure.local);
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.local,
+          message: "Error local",
+        ),
+      );
     }
   }
 
