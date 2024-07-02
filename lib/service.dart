@@ -23,7 +23,6 @@ export 'package:paying_service/src/utils/paying_interceptor.dart';
 export 'package:paying_service/src/utils/either.dart';
 
 export 'package:paying_service/src/results/user_sessions.dart';
-export 'package:paying_service/src/results/authetication.dart';
 export 'package:paying_service/src/results/persons.dart';
 export 'package:paying_service/src/results/general_result.dart';
 
