@@ -34,20 +34,38 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
     required String lat,
   }) async {
     try {
-      final response = await postData(
-        Constants.authLogin,
-        {
-          'phoneOrEmail': phoneOrEmail,
-          'password': password,
-          'opt': opt,
-          'fbt': firebaseToken,
-          'deviceBrand': deviceBrand,
-          'deviceOS': deviceOS,
-          'deviceModel': deviceModel,
-          'long': long,
-          'lat': lat,
-        },
-      );
+      late Response response;
+
+      if (password != null) {
+        response = await postData(
+          Constants.authLogin,
+          {
+            'phoneOrEmail': phoneOrEmail,
+            'password': password,
+            'fbt': firebaseToken,
+            'deviceBrand': deviceBrand,
+            'deviceOS': deviceOS,
+            'deviceModel': deviceModel,
+            'long': long,
+            'lat': lat,
+          },
+        );
+      } else {
+        response = await postData(
+          Constants.authLogin,
+          {
+            'phoneOrEmail': phoneOrEmail,
+            'opt': opt,
+            'fbt': firebaseToken,
+            'deviceBrand': deviceBrand,
+            'deviceOS': deviceOS,
+            'deviceModel': deviceModel,
+            'long': long,
+            'lat': lat,
+          },
+        );
+      }
+
       return Either.goodRequest(AuthLoginModel.fromJson(response.data));
     } on DioException catch (e) {
       HttpRequestFailure error = HttpRequestFailure.server;
