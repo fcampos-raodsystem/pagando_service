@@ -52,7 +52,7 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
 
       return Either.badRequest(Failure(
         failure: error,
-        message: e.response?.data,
+        message: jsonEncode(e.response?.data),
       ));
     } on SocketException {
       return Either.badRequest(Failure(
