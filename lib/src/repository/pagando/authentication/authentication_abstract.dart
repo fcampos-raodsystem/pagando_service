@@ -1,6 +1,9 @@
 import 'package:paying_service/service.dart';
+import 'package:paying_service/src/services/remote/authentication_implement.dart';
 
 abstract class AuthenticationRepositoryImplement {
+  PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId});
+
   GetMeFuture getMe();
 
   PostPersonsFuture postPersons({required String dni, required String dniType});

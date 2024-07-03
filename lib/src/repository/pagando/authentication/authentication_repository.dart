@@ -331,4 +331,50 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
       );
     }
   }
+
+  @override
+  PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId}) async {
+    try {
+      if (personId != null) {
+        await restService.postData(Constants.newUser, {
+          'phoneOrEmail': phoneOrEmail,
+          'personId': personId,
+        });
+        return Either.goodRequest(true);
+      }
+
+      await restService.postData(Constants.newUser, {
+        'phoneOrEmail': phoneOrEmail,
+        'businessId': businessId,
+      });
+
+      return Either.goodRequest(true);
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401)
+        return Either.badRequest(
+          Failure(
+            failure: HttpRequestFailure.unauthorized,
+            message: 'No autorizado',
+          ),
+        );
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.server,
+        message: jsonEncode(e.response?.data),
+      ));
+    } on SocketException {
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.network,
+          message: "Error de conexión",
+        ),
+      );
+    } catch (_) {
+      return Either.badRequest(
+        Failure(
+          failure: HttpRequestFailure.local,
+          message: "Error local",
+        ),
+      );
+    }
+  }
 }

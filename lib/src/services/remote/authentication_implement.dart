@@ -6,6 +6,7 @@ typedef PostLoginWebFuture = Future<Either<Failure, AuthLoginModel>>;
 typedef PostLoginFuture = Future<Either<Failure, AuthLoginModel>>;
 typedef PostLogoutFuture = Future<Either<Failure, bool>>;
 typedef GetMeFuture = Future<Either<Failure, MeModel>>;
+typedef PostNewUserFuture = Future<Either<Failure, bool>>;
 
 abstract class AuthenticationImplement {
   GetMeFuture getMe();
@@ -33,4 +34,6 @@ abstract class AuthenticationImplement {
   });
 
   PostLogoutFuture PostLogout({required String accessToken, required String refreshToken});
+
+  PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId});
 }
