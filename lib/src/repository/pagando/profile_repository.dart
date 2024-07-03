@@ -1,48 +1,48 @@
 import 'package:paying_service/service.dart';
 
 class ProfileRepository {
-  final RestService _restService;
+  final RestService restService;
 
   ProfileRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : _restService = RestService.getInstance(
+  }) : restService = RestService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
 
   Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
-    return _restService.postData(Constants.sendPhoneOtp, {'phone': phone});
+    return restService.postData(Constants.sendPhoneOtp, {'phone': phone});
   }
 
   Future<Response<dynamic>> changePhoneNumber(String phone, String otpCode) {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.changePhone,
       {'newPhone': phone, 'otpCode': otpCode},
     );
   }
 
   Future<Response<dynamic>> getQuestions() {
-    return _restService.getData(
+    return restService.getData(
       Constants.questions,
     );
   }
 
   Future<Response<dynamic>> sendOTPChangeEmail(String email) {
-    return _restService.postData(Constants.sendEmailOtp, {'email': email});
+    return restService.postData(Constants.sendEmailOtp, {'email': email});
   }
 
   Future<Response<dynamic>> changeEmail(String email, String otpCode) {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.changeEmail,
       {'newEmail': email, 'otpCode': otpCode},
     );
   }
 
   Future<Response<dynamic>> setSecurityQuestions(List<Map<String, String>> questions) {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.questions,
       {'questions': questions},
     );
@@ -52,7 +52,7 @@ class ProfileRepository {
     String newPassword,
     String repeatNewPassword,
   ) {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.changePassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
@@ -62,14 +62,14 @@ class ProfileRepository {
     String newPassword,
     String repeatNewPassword,
   ) {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.changeTransactionPassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
   }
 
   Future<Response> changeNames({required String name}) async {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.persons,
       {
         "firstName": name,
@@ -78,7 +78,7 @@ class ProfileRepository {
   }
 
   Future<Response> changeLastNames({required String lastName}) async {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.persons,
       {
         "secondName": lastName,
@@ -87,7 +87,7 @@ class ProfileRepository {
   }
 
   Future<Response> changeBirthDay({required String birthday}) async {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.persons,
       {
         "birthDate": birthday,
@@ -96,7 +96,7 @@ class ProfileRepository {
   }
 
   Future<Response> changeSex({required String sex}) async {
-    return _restService.patchData(
+    return restService.patchData(
       Constants.persons,
       {
         "sex": sex,
@@ -106,7 +106,7 @@ class ProfileRepository {
 
   Future<Response> changeDni({String? prefix, String? dni}) async {
     if (prefix == null) {
-      return _restService.patchData(
+      return restService.patchData(
         Constants.persons,
         {
           "dni": dni,
@@ -115,7 +115,7 @@ class ProfileRepository {
     }
 
     if (dni == null) {
-      return _restService.patchData(
+      return restService.patchData(
         Constants.persons,
         {
           "dniTypePrefix": prefix,
@@ -123,7 +123,7 @@ class ProfileRepository {
       );
     }
 
-    return _restService.patchData(
+    return restService.patchData(
       Constants.persons,
       {
         "dniTypePrefix": prefix,
