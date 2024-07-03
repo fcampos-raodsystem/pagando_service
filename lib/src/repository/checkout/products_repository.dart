@@ -1,6 +1,15 @@
 import 'package:paying_service/service.dart';
 
-class ProductsRepository extends RestService {
-  ProductsRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class ProductsRepository{
+  final RestService _restService;
 
+  ProductsRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
 }

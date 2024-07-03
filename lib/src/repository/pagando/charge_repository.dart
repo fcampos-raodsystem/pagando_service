@@ -1,7 +1,18 @@
 import 'package:paying_service/service.dart';
 
-class ChargeRepository extends RestService {
-  ChargeRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class ChargeRepository{
+  final RestService _restService;
+
+  ChargeRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
+  
 
   Future<Response<dynamic>> postCharges({
     required String phoneOrEmail,
@@ -9,7 +20,7 @@ class ChargeRepository extends RestService {
     required double vesTip,
     required String concept,
   }) {
-    return postData(Constants.charges, {
+    return _restService.postData(Constants.charges, {
       'reciverPoneNumber': phoneOrEmail,
       'vesAmount': vesAmount,
       'vesTip': vesTip,
@@ -18,7 +29,7 @@ class ChargeRepository extends RestService {
   }
 
   Future<Response<dynamic>> postResentChargeNotification({required String idCharge}) {
-    return postData(
+    return _restService.postData(
       '${Constants.charges}/$idCharge/resend-notifications',
       {'notificationType': 'WHATSAPP'},
     );
@@ -28,13 +39,13 @@ class ChargeRepository extends RestService {
     required String idCharge,
     required String referenceCode,
   }) {
-    return patchData('${Constants.charges}/$idCharge/validate-payments', {
+    return _restService.patchData('${Constants.charges}/$idCharge/validate-payments', {
       'referenceCode': referenceCode,
     });
   }
 
   Future<Response<dynamic>> patchRejectCharge({required String idCharge}) {
-    return patchData('${Constants.charges}/$idCharge/reject', {});
+    return _restService.patchData('${Constants.charges}/$idCharge/reject', {});
   }
 
   Future<Response<dynamic>> postCashBacks({
@@ -45,7 +56,7 @@ class ChargeRepository extends RestService {
     required String dniPrefix,
     String? concept,
   }) {
-    return postData(Constants.cashBacks, {
+    return _restService.postData(Constants.cashBacks, {
       'bankCode': bankCode,
       'phoneNumber': phoneNumber,
       'amount': amount,
@@ -56,19 +67,19 @@ class ChargeRepository extends RestService {
   }
 
   Future<Response<dynamic>> rejectCharge({required String rejectURL}) {
-    return patchData(rejectURL, {});
+    return _restService.patchData(rejectURL, {});
   }
 
   Future<Response<dynamic>> payChargeByReference({
     required String id,
     required String reference,
   }) {
-    return patchData('/charges/$id/validate-payments', {
+    return _restService.patchData('/charges/$id/validate-payments', {
       'referenceCode': reference,
     });
   }
 
   Future<Response<dynamic>> readjustCharge({required String id}) {
-    return patchData('/charges/$id/readjusted', {});
+    return _restService.patchData('/charges/$id/readjusted', {});
   }
 }

@@ -1,13 +1,23 @@
 import 'package:paying_service/service.dart';
 
-class DashboardRepository extends RestService {
-  DashboardRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class DashboardRepository {
+  final RestService _restService;
+
+  DashboardRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
 
   Future<Response<dynamic>> getMovements() {
-    return getData(Constants.movements);
+    return _restService.getData(Constants.movements);
   }
 
   Future<Response<dynamic>> rejectRequest({required String rejectUrl}) {
-    return postData(rejectUrl, {});
+    return _restService.postData(rejectUrl, {});
   }
 }

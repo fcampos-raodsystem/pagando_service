@@ -10,7 +10,9 @@ class RestService extends GetxService {
   late CancelToken _cancelToken = CancelToken();
   static Map<String, String>? _mainHeaders;
 
-  RestService({
+  static RestService? _instance;
+
+  RestService._({
     required this.appBaseUrl,
     required this.appBaseDevUrl,
     required this.isDev,
@@ -24,6 +26,19 @@ class RestService extends GetxService {
         )) {
     _dio.interceptors.add(PayingInterceptor());
     updateHeader(null);
+  }
+
+  static RestService getInstance({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) {
+    _instance ??= RestService._(
+      appBaseUrl: appBaseUrl,
+      appBaseDevUrl: appBaseDevUrl,
+      isDev: isDev,
+    );
+    return _instance!;
   }
 
   Map<String, String>? updateHeader(String? token, {bool setHeader = true}) {

@@ -1,30 +1,40 @@
 import 'package:paying_service/service.dart';
 
-class NotificationRepository extends RestService {
-  NotificationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class NotificationRepository {
+  final RestService _restService;
+
+  NotificationRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
 
   Future<Response<dynamic>> getNotifications() {
-    final response = getData(Constants.notifications);
+    final response = _restService.getData(Constants.notifications);
     return response;
   }
 
   Future<Response<dynamic>> markAsRead({String? id}) {
-    final response = patchData('${Constants.notifications}/$id/read', {});
+    final response = _restService.patchData('${Constants.notifications}/$id/read', {});
     return response;
   }
 
   Future<Response<dynamic>> markAllAsRead() {
-    final response = putData('${Constants.notifications}/read-all', {});
+    final response = _restService.putData('${Constants.notifications}/read-all', {});
     return response;
   }
 
   Future<Response<dynamic>> deleteNotification({String? id}) {
-    final response = deleteData('${Constants.notifications}/$id');
+    final response = _restService.deleteData('${Constants.notifications}/$id');
     return response;
   }
 
   Future<Response<dynamic>> deleteAllNotifications() {
-    final response = deleteData(Constants.notifications);
+    final response = _restService.deleteData(Constants.notifications);
     return response;
   }
 }

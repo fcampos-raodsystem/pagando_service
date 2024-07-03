@@ -1,5 +1,15 @@
 import 'package:paying_service/service.dart';
 
-class MovementRepository extends RestService {
-  MovementRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class MovementRepository {
+  final RestService _restService;
+
+  MovementRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
 }

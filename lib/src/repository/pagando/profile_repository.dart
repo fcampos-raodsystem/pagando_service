@@ -1,38 +1,48 @@
 import 'package:paying_service/service.dart';
 
-class ProfileRepository extends RestService {
-  ProfileRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class ProfileRepository {
+  final RestService _restService;
+
+  ProfileRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
 
   Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
-    return postData(Constants.sendPhoneOtp, {'phone': phone});
+    return _restService.postData(Constants.sendPhoneOtp, {'phone': phone});
   }
 
   Future<Response<dynamic>> changePhoneNumber(String phone, String otpCode) {
-    return patchData(
+    return _restService.patchData(
       Constants.changePhone,
       {'newPhone': phone, 'otpCode': otpCode},
     );
   }
 
   Future<Response<dynamic>> getQuestions() {
-    return getData(
+    return _restService.getData(
       Constants.questions,
     );
   }
 
   Future<Response<dynamic>> sendOTPChangeEmail(String email) {
-    return postData(Constants.sendEmailOtp, {'email': email});
+    return _restService.postData(Constants.sendEmailOtp, {'email': email});
   }
 
   Future<Response<dynamic>> changeEmail(String email, String otpCode) {
-    return patchData(
+    return _restService.patchData(
       Constants.changeEmail,
       {'newEmail': email, 'otpCode': otpCode},
     );
   }
 
   Future<Response<dynamic>> setSecurityQuestions(List<Map<String, String>> questions) {
-    return patchData(
+    return _restService.patchData(
       Constants.questions,
       {'questions': questions},
     );
@@ -42,7 +52,7 @@ class ProfileRepository extends RestService {
     String newPassword,
     String repeatNewPassword,
   ) {
-    return patchData(
+    return _restService.patchData(
       Constants.changePassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
@@ -52,14 +62,14 @@ class ProfileRepository extends RestService {
     String newPassword,
     String repeatNewPassword,
   ) {
-    return patchData(
+    return _restService.patchData(
       Constants.changeTransactionPassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
   }
 
   Future<Response> changeNames({required String name}) async {
-    return patchData(
+    return _restService.patchData(
       Constants.persons,
       {
         "firstName": name,
@@ -68,7 +78,7 @@ class ProfileRepository extends RestService {
   }
 
   Future<Response> changeLastNames({required String lastName}) async {
-    return patchData(
+    return _restService.patchData(
       Constants.persons,
       {
         "secondName": lastName,
@@ -77,7 +87,7 @@ class ProfileRepository extends RestService {
   }
 
   Future<Response> changeBirthDay({required String birthday}) async {
-    return patchData(
+    return _restService.patchData(
       Constants.persons,
       {
         "birthDate": birthday,
@@ -86,7 +96,7 @@ class ProfileRepository extends RestService {
   }
 
   Future<Response> changeSex({required String sex}) async {
-    return patchData(
+    return _restService.patchData(
       Constants.persons,
       {
         "sex": sex,
@@ -96,7 +106,7 @@ class ProfileRepository extends RestService {
 
   Future<Response> changeDni({String? prefix, String? dni}) async {
     if (prefix == null) {
-      return patchData(
+      return _restService.patchData(
         Constants.persons,
         {
           "dni": dni,
@@ -105,7 +115,7 @@ class ProfileRepository extends RestService {
     }
 
     if (dni == null) {
-      return patchData(
+      return _restService.patchData(
         Constants.persons,
         {
           "dniTypePrefix": prefix,
@@ -113,7 +123,7 @@ class ProfileRepository extends RestService {
       );
     }
 
-    return patchData(
+    return _restService.patchData(
       Constants.persons,
       {
         "dniTypePrefix": prefix,

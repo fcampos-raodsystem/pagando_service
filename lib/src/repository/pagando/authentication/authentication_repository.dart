@@ -1,12 +1,22 @@
 import 'package:paying_service/service.dart';
 
-class AuthenticationRepository extends RestService implements AuthenticationRepositoryImplement {
-  AuthenticationRepository({required super.appBaseUrl, required super.appBaseDevUrl, required super.isDev});
+class AuthenticationRepository implements AuthenticationRepositoryImplement {
+  final RestService _restService;
+
+  AuthenticationRepository({
+    required String appBaseUrl,
+    required String appBaseDevUrl,
+    required bool isDev,
+  }) : _restService = RestService.getInstance(
+          appBaseUrl: appBaseUrl,
+          appBaseDevUrl: appBaseDevUrl,
+          isDev: isDev,
+        );
 
   @override
   PostUserSessionsFuture postUserSession({required String firebaseToken}) async {
     try {
-      final response = await getData(
+      final response = await _restService.getData(
         '${Constants.userSessions}?fbt=$firebaseToken',
       );
 
@@ -24,7 +34,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   @override
   PostLogoutFuture postLogout({required String accessToken, required String refreshToken}) async {
     try {
-      await postData(
+      await _restService.postData(
         Constants.authLogout,
         {
           'accessToken': accessToken,
@@ -60,7 +70,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   @override
   PostResfreshFuture postRefreshToken({required String refreshToken}) async {
     try {
-      final response = await postData(
+      final response = await _restService.postData(
         Constants.refreshToken,
         {
           'refreshToken': refreshToken,
@@ -98,7 +108,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   @override
   PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken}) async {
     try {
-      final response = await postData(
+      final response = await _restService.postData(
         Constants.verifyToken,
         {
           'accessToken': accessToken,
@@ -139,7 +149,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   @override
   PostPersonsFuture postPersons({required String dni, required String dniType}) async {
     try {
-      final response = await postData(
+      final response = await _restService.postData(
         Constants.persons,
         {
           'dni': dni,
@@ -175,7 +185,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   @override
   PostLoginFuture postLoginWeb({required String phoneOrEmail, String? password, String? opt}) async {
     try {
-      final response = await postData(
+      final response = await _restService.postData(
         Constants.authLogin,
         {
           'phoneOrEmail': phoneOrEmail,
@@ -223,7 +233,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
       late Response response;
 
       if (password != null) {
-        response = await postData(Constants.authLogin, {
+        response = await _restService.postData(Constants.authLogin, {
           "phoneOrEmail": phoneOrEmail,
           "password": password,
           "userSession": {
@@ -236,7 +246,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
           }
         });
       } else {
-        response = await postData(Constants.authLogin, {
+        response = await _restService.postData(Constants.authLogin, {
           "phoneOrEmail": phoneOrEmail,
           "otpCode": opt,
           "userSession": {
@@ -288,7 +298,7 @@ class AuthenticationRepository extends RestService implements AuthenticationRepo
   @override
   GetMeFuture getMe() async {
     try {
-      final response = await getData(
+      final response = await _restService.getData(
         Constants.me,
       );
 
