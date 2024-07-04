@@ -333,7 +333,11 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
   }
 
   @override
-  PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId}) async {
+  PostNewUserFuture postNewUser({
+    required String phoneOrEmail,
+    String? personId,
+    String? businessId,
+  }) async {
     try {
       if (personId != null) {
         await restService.postData(Constants.newUser, {
@@ -346,6 +350,36 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
       await restService.postData(Constants.newUser, {
         'phoneOrEmail': phoneOrEmail,
         'businessId': businessId,
+      });
+
+      return Either.goodRequest(true);
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
+    }
+  }
+
+  @override
+  PostOtoFuture postOtp({required String phoneOrEmail}) async {
+    try {
+      await restService.postData(Constants.sendOtp, {
+        'phoneOrEmail': phoneOrEmail,
       });
 
       return Either.goodRequest(true);

@@ -7,13 +7,14 @@ typedef PostLoginFuture = Future<Either<Failure, AuthLoginModel>>;
 typedef PostLogoutFuture = Future<Either<Failure, bool>>;
 typedef GetMeFuture = Future<Either<Failure, MeModel>>;
 typedef PostNewUserFuture = Future<Either<Failure, bool>>;
+typedef PostOtoFuture = Future<Either<Failure, bool>>;
 
 abstract class AuthenticationImplement {
   GetMeFuture getMe();
 
-  PostVerifyFuture postVerify({required String accessToken, required String refreshToken});
+  PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken});
 
-  PostResfreshFuture PostResfresh({required String refreshToken});
+  PostResfreshFuture postRefreshToken({required String refreshToken});
 
   PostLoginWebFuture postLoginWeb({
     required String phoneOrEmail,
@@ -33,7 +34,9 @@ abstract class AuthenticationImplement {
     required String lat,
   });
 
-  PostLogoutFuture PostLogout({required String accessToken, required String refreshToken});
+  PostLogoutFuture postLogout({required String accessToken, required String refreshToken});
 
   PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId});
+
+  PostOtoFuture postOtp({required String phoneOrEmail});
 }
