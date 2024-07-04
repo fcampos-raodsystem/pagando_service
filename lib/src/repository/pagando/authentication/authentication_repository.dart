@@ -52,7 +52,7 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
 
       return Either.badRequest(Failure(
         failure: error,
-        message: jsonEncode(e.response?.data),
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
       ));
     } on SocketException {
       return Either.badRequest(Failure(
@@ -126,7 +126,7 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
       return Either.badRequest(
         Failure(
           failure: error,
-          message: jsonEncode(e.response?.data),
+          message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
         ),
       );
     } on SocketException {
@@ -202,7 +202,7 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
 
       return Either.badRequest(Failure(
         failure: error,
-        message: e.response?.data,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
       ));
     } on SocketException {
       return Either.badRequest(Failure(
@@ -280,7 +280,7 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
 
       return Either.badRequest(Failure(
         failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "",
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
       ));
     } on SocketException {
       return Either.badRequest(Failure(
@@ -350,31 +350,24 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
 
       return Either.goodRequest(true);
     } on DioException catch (e) {
-      if (e.response?.statusCode == 401)
-        return Either.badRequest(
-          Failure(
-            failure: HttpRequestFailure.unauthorized,
-            message: 'No autorizado',
-          ),
-        );
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
       return Either.badRequest(Failure(
-        failure: HttpRequestFailure.server,
-        message: jsonEncode(e.response?.data),
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
       ));
     } on SocketException {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.network,
-          message: "Error de conexión",
-        ),
-      );
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
     } catch (_) {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.local,
-          message: "Error local",
-        ),
-      );
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
     }
   }
 }
