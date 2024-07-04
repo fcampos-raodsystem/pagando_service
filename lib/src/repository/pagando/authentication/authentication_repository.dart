@@ -1,6 +1,6 @@
 import 'package:paying_service/service.dart';
 
-class AuthenticationRepository implements AuthenticationRepositoryImplement {
+class AuthenticationRepository implements UserSessionImplement, AuthenticationImplement {
   final RestService restService;
 
   AuthenticationRepository({
@@ -14,7 +14,7 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
         );
 
   @override
-  PostUserSessionsFuture postUserSession({required String firebaseToken}) async {
+  PostUserSessionFuture postUserSession({required String firebaseToken}) async {
     try {
       final response = await restService.getData(
         '${Constants.userSessions}?fbt=$firebaseToken',
@@ -381,12 +381,45 @@ class AuthenticationRepository implements AuthenticationRepositoryImplement {
       await restService.postData(Constants.sendOtp, {
         'phoneOrEmail': phoneOrEmail,
       });
+      return Either.goodRequest(true);
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
+    }
+  }
+
+  @override
+  PatchBiometricFuture patchBiometric({required bool biometric}) async {
+    try {
+      await restService.patchData(
+        Constants.setBiometric,
+        {
+          'biometric': biometric,
+        },
+      );
 
       return Either.goodRequest(true);
     } on DioException catch (e) {
       HttpRequestFailure error = HttpRequestFailure.server;
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
 
       return Either.badRequest(Failure(
         failure: error,

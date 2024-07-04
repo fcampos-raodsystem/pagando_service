@@ -8,6 +8,7 @@ typedef PostLogoutFuture = Future<Either<Failure, bool>>;
 typedef GetMeFuture = Future<Either<Failure, MeModel>>;
 typedef PostNewUserFuture = Future<Either<Failure, bool>>;
 typedef PostOtoFuture = Future<Either<Failure, bool>>;
+typedef PatchBiometricFuture = Future<Either<Failure, bool>>;
 
 abstract class AuthenticationImplement {
   GetMeFuture getMe();
@@ -39,4 +40,8 @@ abstract class AuthenticationImplement {
   PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId});
 
   PostOtoFuture postOtp({required String phoneOrEmail});
+
+  PostPersonsFuture postPersons({required String dni, required String dniType});
+
+  PatchBiometricFuture patchBiometric({required bool biometric});
 }
