@@ -69,7 +69,6 @@ export 'package:paying_service/src/repository/checkout/links_repository.dart';
 export 'package:paying_service/src/repository/checkout/products_repository.dart';
 
 export 'package:paying_service/src/repository/pagando/authentication/authentication_repository.dart';
-export 'package:paying_service/src/repository/pagando/authentication/authentication_abstract.dart';
 
 export 'package:paying_service/src/repository/pagando/bank_repository.dart';
 export 'package:paying_service/src/repository/pagando/charge_repository.dart';
