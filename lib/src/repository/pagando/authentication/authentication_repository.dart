@@ -1,6 +1,7 @@
 import 'package:paying_service/service.dart';
 
-class AuthenticationRepository implements UserSessionImplement, AuthenticationImplement {
+class AuthenticationRepository
+    implements UserSessionImplement, AuthenticationImplement {
   final RestService restService;
 
   AuthenticationRepository({
@@ -20,19 +21,26 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
         '${Constants.userSessions}?fbt=$firebaseToken',
       );
 
-      return Either.goodRequest(PostSessionSuccess(userSessionModel: UserSessionModel.fromJson(response.data)));
+      return Either.goodRequest(PostSessionSuccess(
+          userSessionModel: UserSessionModel.fromJson(response.data)));
     } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return Either.badRequest(PostSessionError(failure: HttpRequestFailure.notFound));
-      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.server));
+      if (e.response?.statusCode == 404)
+        return Either.badRequest(
+            PostSessionError(failure: HttpRequestFailure.notFound));
+      return Either.badRequest(
+          PostSessionError(failure: HttpRequestFailure.server));
     } on SocketException {
-      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.network));
+      return Either.badRequest(
+          PostSessionError(failure: HttpRequestFailure.network));
     } catch (_) {
-      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.local));
+      return Either.badRequest(
+          PostSessionError(failure: HttpRequestFailure.local));
     }
   }
 
   @override
-  PostLogoutFuture postLogout({required String accessToken, required String refreshToken}) async {
+  PostLogoutFuture postLogout(
+      {required String accessToken, required String refreshToken}) async {
     try {
       await restService.postData(
         Constants.authLogout,
@@ -47,7 +55,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
       HttpRequestFailure error = HttpRequestFailure.server;
 
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 401)
+        error = HttpRequestFailure.unauthorized;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
       return Either.badRequest(Failure(
@@ -81,7 +90,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
     } on DioException catch (e) {
       HttpRequestFailure error = HttpRequestFailure.server;
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 401)
+        error = HttpRequestFailure.unauthorized;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
       return Either.badRequest(
@@ -106,7 +116,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   }
 
   @override
-  PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken}) async {
+  PostVerifyFuture postVerifyToken(
+      {required String accessToken, required String refreshToken}) async {
     try {
       final response = await restService.postData(
         Constants.verifyToken,
@@ -120,13 +131,15 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
     } on DioException catch (e) {
       HttpRequestFailure error = HttpRequestFailure.server;
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 401)
+        error = HttpRequestFailure.unauthorized;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
       return Either.badRequest(
         Failure(
           failure: error,
-          message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
+          message:
+              e.response != null ? jsonEncode(e.response!.data) : "Not data",
         ),
       );
     } on SocketException {
@@ -147,7 +160,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   }
 
   @override
-  PostPersonsFuture postPersons({required String dni, required String dniType}) async {
+  PostPersonsFuture postPersons(
+      {required String dni, required String dniType}) async {
     try {
       final response = await restService.postData(
         Constants.persons,
@@ -162,7 +176,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
       HttpRequestFailure error = HttpRequestFailure.server;
 
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 401)
+        error = HttpRequestFailure.unauthorized;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
       return Either.badRequest(PostPersonFailure(
@@ -183,7 +198,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   }
 
   @override
-  PostLoginFuture postLoginWeb({required String phoneOrEmail, String? password, String? opt}) async {
+  PostLoginFuture postLoginWeb(
+      {required String phoneOrEmail, String? password, String? opt}) async {
     try {
       final response = await restService.postData(
         Constants.authLogin,
@@ -197,7 +213,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
     } on DioException catch (e) {
       HttpRequestFailure error = HttpRequestFailure.server;
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403)
+        error = HttpRequestFailure.unauthorized;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
       return Either.badRequest(Failure(
@@ -419,7 +436,38 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
       HttpRequestFailure error = HttpRequestFailure.server;
       if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
       if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 401)
+        error = HttpRequestFailure.unauthorized;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: "Error de conexión",
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: "Error local",
+      ));
+    }
+  }
+
+  @override
+  GetFindUserFuture getFindUser({required String phoneOrEmail}) async {
+    try {
+      final response = await restService.getData(
+        '${Constants.findUser}?phoneOrEmail=$phoneOrEmail',
+      );
+
+      return Either.goodRequest(UserModel.fromJson(response.data));
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
 
       return Either.badRequest(Failure(
         failure: error,

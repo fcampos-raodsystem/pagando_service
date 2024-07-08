@@ -9,11 +9,13 @@ typedef GetMeFuture = Future<Either<Failure, MeModel>>;
 typedef PostNewUserFuture = Future<Either<Failure, bool>>;
 typedef PostOtoFuture = Future<Either<Failure, bool>>;
 typedef PatchBiometricFuture = Future<Either<Failure, bool>>;
+typedef GetFindUserFuture = Future<Either<Failure, UserModel>>;
 
 abstract class AuthenticationImplement {
   GetMeFuture getMe();
 
-  PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken});
+  PostVerifyFuture postVerifyToken(
+      {required String accessToken, required String refreshToken});
 
   PostResfreshFuture postRefreshToken({required String refreshToken});
 
@@ -35,13 +37,17 @@ abstract class AuthenticationImplement {
     required String lat,
   });
 
-  PostLogoutFuture postLogout({required String accessToken, required String refreshToken});
+  PostLogoutFuture postLogout(
+      {required String accessToken, required String refreshToken});
 
-  PostNewUserFuture postNewUser({required String phoneOrEmail, String? personId, String? businessId});
+  PostNewUserFuture postNewUser(
+      {required String phoneOrEmail, String? personId, String? businessId});
 
   PostOtoFuture postOtp({required String phoneOrEmail});
 
   PostPersonsFuture postPersons({required String dni, required String dniType});
 
   PatchBiometricFuture patchBiometric({required bool biometric});
+
+  GetFindUserFuture getFindUser({required String phoneOrEmail});
 }
