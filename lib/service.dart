@@ -15,6 +15,7 @@ export 'package:paying_service/src/services/rest_service.dart';
 export 'package:paying_service/src/services/remote/user_session_implement.dart';
 export 'package:paying_service/src/services/remote/persons_implement.dart';
 export 'package:paying_service/src/services/remote/authentication_implement.dart';
+export 'package:paying_service/src/services/remote/link_implement.dart';
 
 export 'package:paying_service/src/failures/http_request_failure.dart';
 
@@ -64,6 +65,7 @@ export 'package:paying_service/src/model/response/pagando/user_model.dart';
 export 'package:paying_service/src/model/response/pagando/user_session_model.dart';
 export 'package:paying_service/src/model/response/pagando/verify_model.dart';
 export 'package:paying_service/src/model/response/pagando/withdraw_model.dart';
+export 'package:paying_service/src/model/response/checkout/link_lasted.dart';
 
 export 'package:paying_service/src/repository/checkout/links_repository.dart';
 export 'package:paying_service/src/repository/checkout/products_repository.dart';

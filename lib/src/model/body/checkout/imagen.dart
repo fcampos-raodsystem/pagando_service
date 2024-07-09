@@ -1,13 +1,13 @@
 class Imagen {
   Imagen({
-    required this.id,
+    required this.url,
   });
 
   factory Imagen.fromJson(Map<String, dynamic> json) {
     return Imagen(
-      id: json['_id'].toString(),
+      url: json['url'],
     );
   }
 
-  final String id;
+  final String url;
 }

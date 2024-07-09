@@ -1,6 +1,6 @@
 import 'package:paying_service/service.dart';
 
-class LinksRepository {
+class LinksRepository implements LinkImplement {
   final RestService restService;
 
   LinksRepository({
@@ -12,28 +12,66 @@ class LinksRepository {
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
-  
 
-  Future<Response<dynamic>> createLinks({required String userId, required List<String> productIds}) {
-    return restService.postData(
-      Constants.links,
-      {
-        "pagandoUserId": userId,
-        "productIds": productIds,
-      },
-    );
+  GetLastedLinkFuture getLastedLink({required String userId}) async {
+    try {
+      final response = await restService.getData('${Constants.links}?pagandoUserId=$userId');
+
+      return Either.goodRequest(LinkLastedModel.fromJson(response.data));
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: 'Error de conexión',
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: 'Error local',
+      ));
+    }
   }
 
-  Future<Response<dynamic>> setProductsToLink({required String linkId, required List<String> productIds}) {
-    return restService.postData(
-      '${Constants.links}/$linkId',
-      {
-        "productIds": productIds,
-      },
-    );
-  }
+  @override
+  PostCreateLinkFuture postCreateLink({required String userId}) async {
+    try {
+      final response = await restService.postData(
+        Constants.links,
+        {"pagandoUserId": userId},
+      );
 
-  Future<Response<dynamic>> getLastedLink({required String userId}) {
-    return restService.getData('${Constants.links}/latest?pagandoUserId=$userId');
+      return Either.goodRequest(LinkLastedModel.fromJson(response.data));
+    } on DioException catch (e) {
+      HttpRequestFailure error = HttpRequestFailure.server;
+
+      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
+      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
+      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
+
+      return Either.badRequest(Failure(
+        failure: error,
+        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
+      ));
+    } on SocketException {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.network,
+        message: 'Error de conexión',
+      ));
+    } catch (_) {
+      return Either.badRequest(Failure(
+        failure: HttpRequestFailure.local,
+        message: 'Error local',
+      ));
+    }
   }
 }
