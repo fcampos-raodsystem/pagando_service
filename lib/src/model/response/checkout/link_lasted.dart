@@ -9,12 +9,12 @@ class LinkLastedModel {
   factory LinkLastedModel.fromJson(Map<String, dynamic> json) {
     return LinkLastedModel(
       message: json['message'].toString(),
-      data: List<LinkLastedData>.from(json['data'].map((x) => LinkLastedData.fromJson(x))),
+      data: LinkLastedData.fromJson(json['data']),
     );
   }
 
   final String message;
-  final List<LinkLastedData> data;
+  final LinkLastedData data;
 }
 
 class LinkLastedData {
