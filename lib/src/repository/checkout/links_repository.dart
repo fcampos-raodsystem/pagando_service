@@ -15,7 +15,7 @@ class LinksRepository implements LinkImplement {
 
   GetLastedLinkFuture getLastedLink({required String userId}) async {
     try {
-      final response = await service.getData('${Constants.links}?pagandoUserId=$userId');
+      final response = await service.getData('${Constants.links}/latest?pagandoUserId=$userId');
 
       return Either.goodRequest(LinkLastedModel.fromJson(response.data));
     } on DioException catch (e) {
