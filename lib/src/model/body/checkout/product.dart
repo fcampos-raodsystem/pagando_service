@@ -7,6 +7,7 @@ class Product {
     required this.description,
     required this.price,
     required this.image,
+    required this.countNumber,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -15,6 +16,7 @@ class Product {
       title: json['title'],
       description: json['description'].toString(),
       price: json['price'].toString(),
+      countNumber: json['countNumber'].toString(),
       image: json['image'] != null ? Imagen.fromJson(json['image']) : null,
     );
   }
@@ -23,5 +25,6 @@ class Product {
   final String title;
   final String description;
   final String price;
+  final String countNumber;
   final Imagen? image;
 }
