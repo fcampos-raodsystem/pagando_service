@@ -42,7 +42,10 @@ class BankRepository {
     });
   }
 
-  Future<Response<dynamic>> sendDepositNotification(String vesAmount) {
-    return service.postData(Constants.depositNotification, {'vesAmount': double.parse(vesAmount)});
+  Future<Response<dynamic>> sendDepositNotification(String vesAmount, String paymentMethodId) {
+    return service.postData(Constants.depositNotification, {
+      'vesAmount': double.parse(vesAmount), 
+      'paymentMethodDetailId': paymentMethodId
+      });
   }
 }
