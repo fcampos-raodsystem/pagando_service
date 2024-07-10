@@ -1,13 +1,13 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/checkout_export.dart';
 
 class LinksRepository implements LinkImplement {
-  final RestService restService;
+  final CheckOutService service;
 
   LinksRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = CheckOutService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
@@ -15,7 +15,7 @@ class LinksRepository implements LinkImplement {
 
   GetLastedLinkFuture getLastedLink({required String userId}) async {
     try {
-      final response = await restService.getData('${Constants.links}?pagandoUserId=$userId');
+      final response = await service.getData('${Constants.links}?pagandoUserId=$userId');
 
       return Either.goodRequest(LinkLastedModel.fromJson(response.data));
     } on DioException catch (e) {
@@ -45,7 +45,7 @@ class LinksRepository implements LinkImplement {
   @override
   PostCreateLinkFuture postCreateLink({required String userId}) async {
     try {
-      final response = await restService.postData(
+      final response = await service.postData(
         Constants.links,
         {"pagandoUserId": userId},
       );

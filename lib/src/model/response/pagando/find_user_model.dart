@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 /// Model for response of find user
 class FindUSer {
@@ -55,9 +55,7 @@ class DataFindUser {
         secureConfig: json['secureConfig'] != null ? SecureConfig.fromJson(json['secureConfig'] as Map<String, dynamic>) : SecureConfig(),
         person: json['secureConfig'] != null ? DataPersonModel.fromJson(json['person'] as Map<String, dynamic>) : null,
         session: json['session'] != null ? Session.fromJson(json['session'] as Map<String, dynamic>) : Session(),
-        securityImage: json['securityImage'] != null
-            ? SecurityImageData.fromJson(json['securityImage'] as Map<String, dynamic>)
-            : SecurityImageData(image: ImageData(url: "")));
+        securityImage: json['securityImage'] != null ? SecurityImageData.fromJson(json['securityImage'] as Map<String, dynamic>) : SecurityImageData(image: ImageData(url: "")));
   }
 
   /// [id] is a string

@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class LinkLastedModel {
   LinkLastedModel({
@@ -9,8 +9,7 @@ class LinkLastedModel {
   factory LinkLastedModel.fromJson(Map<String, dynamic> json) {
     return LinkLastedModel(
       message: json['message'].toString(),
-      data: List<LinkLastedData>.from(
-          json['data'].map((x) => LinkLastedData.fromJson(x))),
+      data: List<LinkLastedData>.from(json['data'].map((x) => LinkLastedData.fromJson(x))),
     );
   }
 
@@ -31,9 +30,7 @@ class LinkLastedData {
       id: json['_id'].toString(),
       pagandoUserId: json['pagandoUserId'].toString(),
       url: json['url'],
-      products: json['products'] != null
-          ? List<Product>.from(json['products'].map((x) => Product.fromJson(x)))
-          : [],
+      products: json['products'] != null ? List<Product>.from(json['products'].map((x) => Product.fromJson(x))) : [],
     );
   }
 

@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 typedef PostVerifyFuture = Future<Either<Failure, VerifyModel>>;
 typedef PostResfreshFuture = Future<Either<Failure, AuthLoginModel>>;

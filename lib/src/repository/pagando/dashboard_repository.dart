@@ -1,23 +1,23 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class DashboardRepository {
-  final RestService restService;
+  final PagandoService service;
 
   DashboardRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = PagandoService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
 
   Future<Response<dynamic>> getMovements() {
-    return restService.getData(Constants.movements);
+    return service.getData(Constants.movements);
   }
 
   Future<Response<dynamic>> rejectRequest({required String rejectUrl}) {
-    return restService.postData(rejectUrl, {});
+    return service.postData(rejectUrl, {});
   }
 }

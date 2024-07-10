@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class PayingInterceptor extends Interceptor {
   static const String noInternetMessage = 'Network connection failed. Please try again.';

@@ -1,25 +1,25 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class SecurityRepository {
-  final RestService restService;
+  final PagandoService service;
 
   SecurityRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = PagandoService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
 
   Future<Response<dynamic>> getSecurityImages() async {
-    final response = await restService.getData(Constants.securityImages);
+    final response = await service.getData(Constants.securityImages);
     return response;
   }
 
   Future<Response<dynamic>> updateSecurityImage({required String imageId}) async {
-    final response = await restService.patchData(
+    final response = await service.patchData(
       Constants.securityImages,
       {
         'securityImageId': imageId,

@@ -1,40 +1,40 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class NotificationRepository {
-  final RestService restService;
+  final PagandoService service;
 
   NotificationRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = PagandoService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
 
-  Future<Response<dynamic>> getNotifications() {
-    final response = restService.getData(Constants.notifications);
+  Future<Response<dynamic>> getNotifications() async {
+    final response = await service.getData(Constants.notifications);
     return response;
   }
 
-  Future<Response<dynamic>> markAsRead({String? id}) {
-    final response = restService.patchData('${Constants.notifications}/$id/read', {});
+  Future<Response<dynamic>> markAsRead({String? id}) async {
+    final response = await service.patchData('${Constants.notifications}/$id/read', {});
     return response;
   }
 
-  Future<Response<dynamic>> markAllAsRead() {
-    final response = restService.putData('${Constants.notifications}/read-all', {});
+  Future<Response<dynamic>> markAllAsRead() async {
+    final response = await service.putData('${Constants.notifications}/read-all', {});
     return response;
   }
 
-  Future<Response<dynamic>> deleteNotification({String? id}) {
-    final response = restService.deleteData('${Constants.notifications}/$id');
+  Future<Response<dynamic>> deleteNotification({String? id}) async {
+    final response = service.deleteData('${Constants.notifications}/$id');
     return response;
   }
 
-  Future<Response<dynamic>> deleteAllNotifications() {
-    final response = restService.deleteData(Constants.notifications);
+  Future<Response<dynamic>> deleteAllNotifications() async {
+    final response = service.deleteData(Constants.notifications);
     return response;
   }
 }

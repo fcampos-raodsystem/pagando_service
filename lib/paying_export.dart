@@ -1,4 +1,4 @@
-/// Pagando API RestService
+/// Pagando API PagandoService
 library;
 
 export 'dart:async';
@@ -11,7 +11,8 @@ export 'package:get/get.dart' hide Response, FormData, MultipartFile;
 export 'package:dio/dio.dart';
 export 'package:freezed_annotation/freezed_annotation.dart';
 
-export 'package:paying_service/src/services/rest_service.dart';
+export 'package:paying_service/src/services/pagando_service.dart';
+
 export 'package:paying_service/src/services/remote/user_session_implement.dart';
 export 'package:paying_service/src/services/remote/persons_implement.dart';
 export 'package:paying_service/src/services/remote/authentication_implement.dart';

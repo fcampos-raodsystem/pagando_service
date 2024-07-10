@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 abstract class Persons {}
 

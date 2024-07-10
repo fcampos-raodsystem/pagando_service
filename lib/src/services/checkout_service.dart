@@ -1,8 +1,8 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/checkout_export.dart';
 
 const timeoutInSeconds = 30;
 
-class RestService extends GetxService {
+class CheckOutService extends GetxService {
   final bool isDev;
   final String appBaseDevUrl;
   final String appBaseUrl;
@@ -10,9 +10,9 @@ class RestService extends GetxService {
   late CancelToken _cancelToken = CancelToken();
   static Map<String, String>? _mainHeaders;
 
-  static RestService? _instance;
+  static CheckOutService? _instance;
 
-  RestService._({
+  CheckOutService._({
     required this.appBaseUrl,
     required this.appBaseDevUrl,
     required this.isDev,
@@ -28,12 +28,12 @@ class RestService extends GetxService {
     updateHeader(null);
   }
 
-  static RestService getInstance({
+  static CheckOutService getInstance({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
   }) {
-    _instance ??= RestService._(
+    _instance ??= CheckOutService._(
       appBaseUrl: appBaseUrl,
       appBaseDevUrl: appBaseDevUrl,
       isDev: isDev,

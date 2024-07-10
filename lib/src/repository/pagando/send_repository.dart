@@ -1,20 +1,20 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class SendRepository {
-  final RestService restService;
+  final PagandoService service;
 
   SendRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = PagandoService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
 
-  Future<Response<dynamic>> findByPin({required String pin}) {
-    return restService.getData(
+  Future<Response<dynamic>> findByPin({required String pin}) async {
+    return await service.getData(
       '${Constants.findBy}?userDocument=$pin&documentType=PIN',
     );
   }
@@ -22,15 +22,15 @@ class SendRepository {
   Future<Response<dynamic>> findByPhone({
     required String phone,
     String? operator,
-  }) {
+  }) async {
     final type = operator != '' ? operator : '+58';
-    return restService.getData(
+    return await service.getData(
       '${Constants.findBy}?userDocument=$type$phone&documentType=PHONE',
     );
   }
 
-  Future<Response<dynamic>> findLastUsers() {
-    return restService.getData(
+  Future<Response<dynamic>> findLastUsers() async {
+    return await service.getData(
       '${Constants.directories}/find-last-users',
     );
   }
@@ -38,15 +38,15 @@ class SendRepository {
   Future<Response<dynamic>> findByDni({
     required String dni,
     required String dniType,
-  }) {
+  }) async {
     final type = dniType != '' ? dniType : 'V';
-    return restService.getData(
+    return await service.getData(
       '${Constants.findBy}?userDocument=$type-$dni&documentType=DNI',
     );
   }
 
-  Future<Response<dynamic>> findByMail({required String mail}) {
-    return restService.getData(
+  Future<Response<dynamic>> findByMail({required String mail}) async {
+    return await service.getData(
       '${Constants.findBy}?userDocument=$mail&documentType=EMAIL',
     );
   }
@@ -56,8 +56,8 @@ class SendRepository {
     required String concept,
     required double amount,
     required String info,
-  }) {
-    return restService.postData(Constants.sends, {
+  }) async {
+    return await service.postData(Constants.sends, {
       'userId': idUser,
       'amount': amount,
       'concept': info,
@@ -68,19 +68,19 @@ class SendRepository {
     required String idUser,
     required String concept,
     required double amount,
-  }) {
-    return restService.postData(Constants.requests, {
+  }) async {
+    return await service.postData(Constants.requests, {
       'userId': idUser,
       'amount': amount,
       'concept': concept,
     });
   }
 
-  Future<Response<dynamic>> acceptRequest({required String acceptURL}) {
-    return restService.postData(acceptURL, {});
+  Future<Response<dynamic>> acceptRequest({required String acceptURL}) async {
+    return await service.postData(acceptURL, {});
   }
 
-  Future<Response<dynamic>> rejectRequest({required String rejectURL}) {
-    return restService.postData(rejectURL, {});
+  Future<Response<dynamic>> rejectRequest({required String rejectURL}) async {
+    return await service.postData(rejectURL, {});
   }
 }

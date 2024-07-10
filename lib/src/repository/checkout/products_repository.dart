@@ -1,13 +1,13 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/src/services/checkout_service.dart';
 
-class ProductsRepository{
-  final RestService restService;
+class ProductsRepository {
+  final CheckOutService PagandoService;
 
   ProductsRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : PagandoService = CheckOutService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,

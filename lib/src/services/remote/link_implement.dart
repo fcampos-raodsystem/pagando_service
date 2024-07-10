@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 typedef GetLastedLinkFuture = Future<Either<Failure, LinkLastedModel>>;
 typedef PostCreateLinkFuture = Future<Either<Failure, LinkLastedModel>>;

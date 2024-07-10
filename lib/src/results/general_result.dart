@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 abstract class GeneralResult {}
 
@@ -8,4 +8,3 @@ class Failure extends GeneralResult {
 
   Failure({required this.message, required this.failure});
 }
-

@@ -1,48 +1,48 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class ProfileRepository {
-  final RestService restService;
+  final PagandoService service;
 
   ProfileRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = PagandoService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
         );
 
-  Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) {
-    return restService.postData(Constants.sendPhoneOtp, {'phone': phone});
+  Future<Response<dynamic>> sendOTPChangePhoneNumber(String phone) async {
+    return await service.postData(Constants.sendPhoneOtp, {'phone': phone});
   }
 
-  Future<Response<dynamic>> changePhoneNumber(String phone, String otpCode) {
-    return restService.patchData(
+  Future<Response<dynamic>> changePhoneNumber(String phone, String otpCode) async {
+    return await service.patchData(
       Constants.changePhone,
       {'newPhone': phone, 'otpCode': otpCode},
     );
   }
 
-  Future<Response<dynamic>> getQuestions() {
-    return restService.getData(
+  Future<Response<dynamic>> getQuestions() async {
+    return await service.getData(
       Constants.questions,
     );
   }
 
-  Future<Response<dynamic>> sendOTPChangeEmail(String email) {
-    return restService.postData(Constants.sendEmailOtp, {'email': email});
+  Future<Response<dynamic>> sendOTPChangeEmail(String email) async {
+    return await service.postData(Constants.sendEmailOtp, {'email': email});
   }
 
-  Future<Response<dynamic>> changeEmail(String email, String otpCode) {
-    return restService.patchData(
+  Future<Response<dynamic>> changeEmail(String email, String otpCode) async {
+    return await service.patchData(
       Constants.changeEmail,
       {'newEmail': email, 'otpCode': otpCode},
     );
   }
 
-  Future<Response<dynamic>> setSecurityQuestions(List<Map<String, String>> questions) {
-    return restService.patchData(
+  Future<Response<dynamic>> setSecurityQuestions(List<Map<String, String>> questions) async {
+    return await service.patchData(
       Constants.questions,
       {'questions': questions},
     );
@@ -51,8 +51,8 @@ class ProfileRepository {
   Future<Response<dynamic>> changePassword(
     String newPassword,
     String repeatNewPassword,
-  ) {
-    return restService.patchData(
+  ) async {
+    return await service.patchData(
       Constants.changePassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
@@ -61,15 +61,15 @@ class ProfileRepository {
   Future<Response> changeTransactionPassword(
     String newPassword,
     String repeatNewPassword,
-  ) {
-    return restService.patchData(
+  ) async {
+    return await service.patchData(
       Constants.changeTransactionPassword,
       {'newPassword': newPassword, 'repeatNewPassword': repeatNewPassword},
     );
   }
 
   Future<Response> changeNames({required String name}) async {
-    return restService.patchData(
+    return await service.patchData(
       Constants.persons,
       {
         "firstName": name,
@@ -78,7 +78,7 @@ class ProfileRepository {
   }
 
   Future<Response> changeLastNames({required String lastName}) async {
-    return restService.patchData(
+    return await service.patchData(
       Constants.persons,
       {
         "secondName": lastName,
@@ -87,7 +87,7 @@ class ProfileRepository {
   }
 
   Future<Response> changeBirthDay({required String birthday}) async {
-    return restService.patchData(
+    return await service.patchData(
       Constants.persons,
       {
         "birthDate": birthday,
@@ -96,7 +96,7 @@ class ProfileRepository {
   }
 
   Future<Response> changeSex({required String sex}) async {
-    return restService.patchData(
+    return await service.patchData(
       Constants.persons,
       {
         "sex": sex,
@@ -106,7 +106,7 @@ class ProfileRepository {
 
   Future<Response> changeDni({String? prefix, String? dni}) async {
     if (prefix == null) {
-      return restService.patchData(
+      return await service.patchData(
         Constants.persons,
         {
           "dni": dni,
@@ -115,7 +115,7 @@ class ProfileRepository {
     }
 
     if (dni == null) {
-      return restService.patchData(
+      return await service.patchData(
         Constants.persons,
         {
           "dniTypePrefix": prefix,
@@ -123,7 +123,7 @@ class ProfileRepository {
       );
     }
 
-    return restService.patchData(
+    return await service.patchData(
       Constants.persons,
       {
         "dniTypePrefix": prefix,

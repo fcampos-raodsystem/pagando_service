@@ -1,4 +1,4 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class UserSessionModel {
   UserSessionModel({required this.message, required this.data});

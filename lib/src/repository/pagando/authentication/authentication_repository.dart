@@ -1,13 +1,13 @@
-import 'package:paying_service/service.dart';
+import 'package:paying_service/paying_export.dart';
 
 class AuthenticationRepository implements UserSessionImplement, AuthenticationImplement {
-  final RestService restService;
+  final PagandoService service;
 
   AuthenticationRepository({
     required String appBaseUrl,
     required String appBaseDevUrl,
     required bool isDev,
-  }) : restService = RestService.getInstance(
+  }) : service = PagandoService.getInstance(
           appBaseUrl: appBaseUrl,
           appBaseDevUrl: appBaseDevUrl,
           isDev: isDev,
@@ -16,7 +16,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostUserSessionFuture postUserSession({required String firebaseToken}) async {
     try {
-      final response = await restService.getData(
+      final response = await service.getData(
         '${Constants.userSessions}?fbt=$firebaseToken',
       );
 
@@ -34,7 +34,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostLogoutFuture postLogout({required String accessToken, required String refreshToken}) async {
     try {
-      await restService.postData(
+      await service.postData(
         Constants.authLogout,
         {
           'accessToken': accessToken,
@@ -70,7 +70,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostResfreshFuture postRefreshToken({required String refreshToken}) async {
     try {
-      final response = await restService.postData(
+      final response = await service.postData(
         Constants.refreshToken,
         {
           'refreshToken': refreshToken,
@@ -108,7 +108,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken}) async {
     try {
-      final response = await restService.postData(
+      final response = await service.postData(
         Constants.verifyToken,
         {
           'accessToken': accessToken,
@@ -149,7 +149,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostPersonsFuture postPersons({required String dni, required String dniType}) async {
     try {
-      final response = await restService.postData(
+      final response = await service.postData(
         Constants.persons,
         {
           'dni': dni,
@@ -185,7 +185,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostLoginFuture postLoginWeb({required String phoneOrEmail, String? password, String? opt}) async {
     try {
-      final response = await restService.postData(
+      final response = await service.postData(
         Constants.authLogin,
         {
           'phoneOrEmail': phoneOrEmail,
@@ -233,7 +233,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
       late Response response;
 
       if (password != null) {
-        response = await restService.postData(Constants.authLogin, {
+        response = await service.postData(Constants.authLogin, {
           "phoneOrEmail": phoneOrEmail,
           "password": password,
           "userSession": {
@@ -246,7 +246,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
           }
         });
       } else {
-        response = await restService.postData(Constants.authLogin, {
+        response = await service.postData(Constants.authLogin, {
           "phoneOrEmail": phoneOrEmail,
           "otpCode": opt,
           "userSession": {
@@ -298,7 +298,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   GetMeFuture getMe() async {
     try {
-      final response = await restService.getData(
+      final response = await service.getData(
         Constants.me,
       );
 
@@ -340,14 +340,14 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   }) async {
     try {
       if (personId != null) {
-        await restService.postData(Constants.newUser, {
+        await service.postData(Constants.newUser, {
           'phoneOrEmail': phoneOrEmail,
           'personId': personId,
         });
         return Either.goodRequest(true);
       }
 
-      await restService.postData(Constants.newUser, {
+      await service.postData(Constants.newUser, {
         'phoneOrEmail': phoneOrEmail,
         'businessId': businessId,
       });
@@ -378,7 +378,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostOtoFuture postOtp({required String phoneOrEmail}) async {
     try {
-      await restService.postData(Constants.sendOtp, {
+      await service.postData(Constants.sendOtp, {
         'phoneOrEmail': phoneOrEmail,
       });
       return Either.goodRequest(true);
@@ -407,7 +407,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PatchBiometricFuture patchBiometric({required bool biometric}) async {
     try {
-      await restService.patchData(
+      await service.patchData(
         Constants.setBiometric,
         {
           'biometric': biometric,
@@ -441,7 +441,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   GetFindUserFuture getFindUser({required String phoneOrEmail}) async {
     try {
-      final response = await restService.getData(
+      final response = await service.getData(
         '${Constants.findUser}?phoneOrEmail=$phoneOrEmail',
       );
 
@@ -471,7 +471,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
   @override
   PostVerifyPasswordFuture postVerifyPassword({required String password}) async {
     try {
-      await restService.postData(Constants.passwordVerify, {
+      await service.postData(Constants.passwordVerify, {
         'password': password,
       });
 
