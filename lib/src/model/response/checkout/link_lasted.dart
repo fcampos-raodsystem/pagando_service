@@ -1,4 +1,4 @@
-import 'package:paying_service/paying_export.dart';
+import 'package:paying_service/checkout_export.dart';
 
 class LinkLastedModel {
   LinkLastedModel({
