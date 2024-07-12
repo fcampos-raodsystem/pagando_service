@@ -1,14 +1,29 @@
-import 'package:paying_service/paying_export.dart';
+import 'package:paying_service/checkout_export.dart';
 
-typedef PostCreateProductFuture = Future<Either<Failure, LinkLastedModel>>;
+typedef CreateProductFuture = Future<Either<Failure, LinkLastedModel>>;
+typedef DeleteProductFuture = Future<Either<Failure, bool>>;
+typedef EditProductFuture = Future<Either<Failure, bool>>;
 
 abstract class ProductImplement {
-  PostCreateProductFuture postCreateProduct({
+  CreateProductFuture createProduct({
     required String userId,
     required String title,
     required String description,
     required String price,
     required String countNumber,
-    required XFile image,
+    required List<int> image,
+  });
+
+  DeleteProductFuture deleteProduct({
+    required String productId,
+  });
+
+  EditProductFuture editProductFuture({
+    required String productId,
+    required String title,
+    required String description,
+    required String price,
+    required String countNumber,
+    required List<int> image,
   });
 }

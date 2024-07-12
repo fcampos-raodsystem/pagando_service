@@ -23,3 +23,4 @@ export 'package:paying_service/src/model/response/checkout/link_lasted.dart';
 export 'package:paying_service/src/repository/checkout/links_repository.dart';
 export 'package:paying_service/src/repository/checkout/products_repository.dart';
 export 'package:paying_service/src/results/general_result.dart';
+export 'package:paying_service/src/services/remote/product_implement.dart';
