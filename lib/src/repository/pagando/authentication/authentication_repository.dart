@@ -410,7 +410,7 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
       await service.patchData(
         Constants.setBiometric,
         {
-          'biometric': biometric,
+          'hasBiometric': biometric,
         },
       );
 
