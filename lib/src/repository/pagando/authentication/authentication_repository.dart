@@ -1,5 +1,19 @@
 import 'package:paying_service/paying_export.dart';
 
+part 'functions/post_user_session.dart';
+part 'functions/post_logout.dart';
+part 'functions/post_refresh_token.dart';
+part 'functions/post_verify_token.dart';
+part 'functions/post_persons.dart';
+part 'functions/login_web.dart';
+part 'functions/login.dart';
+part 'functions/me.dart';
+part 'functions/new_user.dart';
+part 'functions/post_otp.dart';
+part 'functions/patch_biometric.dart';
+part 'functions/find_user.dart';
+part 'functions/verify_password.dart';
+
 class AuthenticationRepository implements UserSessionImplement, AuthenticationImplement {
   final PagandoService service;
 
@@ -14,208 +28,59 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
         );
 
   @override
-  PostUserSessionFuture postUserSession({required String firebaseToken}) async {
-    try {
-      final response = await service.getData(
-        '${Constants.userSessions}?fbt=$firebaseToken',
+  PostUserSessionFuture postUserSession({
+    required String firebaseToken,
+  }) async =>
+      UserSession(
+        firebaseToken: firebaseToken,
       );
-
-      return Either.goodRequest(PostSessionSuccess(userSessionModel: UserSessionModel.fromJson(response.data)));
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 404) return Either.badRequest(PostSessionError(failure: HttpRequestFailure.notFound));
-      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.server));
-    } on SocketException {
-      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.network));
-    } catch (_) {
-      return Either.badRequest(PostSessionError(failure: HttpRequestFailure.local));
-    }
-  }
 
   @override
-  PostLogoutFuture postLogout({required String accessToken, required String refreshToken}) async {
-    try {
-      await service.postData(
-        Constants.authLogout,
-        {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        },
+  PostLogoutFuture postLogout({
+    required String accessToken,
+    required String refreshToken,
+  }) async =>
+      Logout(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       );
-
-      return Either.goodRequest(true);
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: 'Error de conexión',
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: 'Error local',
-      ));
-    }
-  }
 
   @override
-  PostResfreshFuture postRefreshToken({required String refreshToken}) async {
-    try {
-      final response = await service.postData(
-        Constants.refreshToken,
-        {
-          'refreshToken': refreshToken,
-        },
+  PostResfreshFuture postRefreshToken({
+    required String refreshToken,
+  }) async =>
+      RefreshToken(
+        refreshToken: refreshToken,
       );
-
-      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(
-        Failure(
-          failure: error,
-          message: jsonEncode(e.response?.data),
-        ),
-      );
-    } on SocketException {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.network,
-          message: "Error de conexión",
-        ),
-      );
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
 
   @override
-  PostVerifyFuture postVerifyToken({required String accessToken, required String refreshToken}) async {
-    try {
-      final response = await service.postData(
-        Constants.verifyToken,
-        {
-          'accessToken': accessToken,
-          'refreshToken': refreshToken,
-        },
+  PostVerifyFuture postVerifyToken({
+    required String accessToken,
+    required String refreshToken,
+  }) async =>
+      VerifyToken(
+        accessToken: accessToken,
+        refreshToken: refreshToken,
       );
-
-      return Either.goodRequest(VerifyModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(
-        Failure(
-          failure: error,
-          message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-        ),
-      );
-    } on SocketException {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.network,
-          message: "Error de conexión",
-        ),
-      );
-    } catch (_) {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.local,
-          message: "Error local",
-        ),
-      );
-    }
-  }
 
   @override
-  PostPersonsFuture postPersons({required String dni, required String dniType}) async {
-    try {
-      final response = await service.postData(
-        Constants.persons,
-        {
-          'dni': dni,
-          'dniTypePrefix': dniType,
-        },
-      );
-
-      return Either.goodRequest(PersonModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(PostPersonFailure(
-        failure: error,
-        message: e.response?.data.toString(),
-      ));
-    } on SocketException {
-      return Either.badRequest(PostPersonFailure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(PostPersonFailure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
+  PostPersonsFuture postPersons({
+    required String dni,
+    required String dniType,
+  }) async =>
+      FetchPersons(dni: dni, dniType: dniType);
 
   @override
-  PostLoginFuture postLoginWeb({required String phoneOrEmail, String? password, String? opt}) async {
-    try {
-      final response = await service.postData(
-        Constants.authLogin,
-        {
-          'phoneOrEmail': phoneOrEmail,
-          'password': password,
-          'opt': opt,
-        },
+  PostLoginFuture postLoginWeb({
+    required String phoneOrEmail,
+    String? password,
+    String? opt,
+  }) async =>
+      LoginWeb(
+        phoneOrEmail: phoneOrEmail,
+        password: password,
+        opt: opt,
       );
-      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) error = HttpRequestFailure.unauthorized;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
 
   @override
   PostLoginFuture postLogin({
@@ -228,274 +93,61 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
     required String deviceModel,
     required String long,
     required String lat,
-  }) async {
-    try {
-      late Response response;
-
-      if (password != null) {
-        response = await service.postData(Constants.authLogin, {
-          "phoneOrEmail": phoneOrEmail,
-          "password": password,
-          "userSession": {
-            "firebaseToken": firebaseToken,
-            "device": deviceBrand,
-            "so": deviceOS,
-            "model": deviceModel,
-            "long": long,
-            "lat": lat,
-          }
-        });
-      } else {
-        response = await service.postData(Constants.authLogin, {
-          "phoneOrEmail": phoneOrEmail,
-          "otpCode": opt,
-          "userSession": {
-            "firebaseToken": firebaseToken,
-            "device": deviceBrand,
-            "so": deviceOS,
-            "model": deviceModel,
-            "long": long,
-            "lat": lat,
-          },
-        });
-      }
-
-      return Either.goodRequest(AuthLoginModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 401) {
-        return Either.badRequest(Failure(
-          failure: HttpRequestFailure.unauthorized,
-          message: "Usuario ya tiene una session activa",
-        ));
-      }
-      if (e.response?.statusCode == 403) {
-        return Either.badRequest(Failure(
-          failure: HttpRequestFailure.unauthorized,
-          message: "Usuario o contraseña incorrectos",
-        ));
-      }
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
+  }) async =>
+      Login(
+        phoneOrEmail: phoneOrEmail,
+        firebaseToken: firebaseToken,
+        deviceBrand: deviceBrand,
+        deviceOS: deviceOS,
+        deviceModel: deviceModel,
+        long: long,
+        lat: lat,
+      );
 
   @override
-  GetMeFuture getMe() async {
-    try {
-      final response = await service.getData(
-        Constants.me,
-      );
-
-      return Either.goodRequest(MeModel.fromJson(response.data));
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401)
-        return Either.badRequest(
-          Failure(
-            failure: HttpRequestFailure.unauthorized,
-            message: 'No autorizado',
-          ),
-        );
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.server,
-        message: jsonEncode(e.response?.data),
-      ));
-    } on SocketException {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.network,
-          message: "Error de conexión",
-        ),
-      );
-    } catch (_) {
-      return Either.badRequest(
-        Failure(
-          failure: HttpRequestFailure.local,
-          message: "Error local",
-        ),
-      );
-    }
-  }
+  GetMeFuture getMe() async => Me();
 
   @override
   PostNewUserFuture postNewUser({
     required String phoneOrEmail,
     String? personId,
     String? businessId,
-  }) async {
-    try {
-      if (personId != null) {
-        await service.postData(Constants.newUser, {
-          'phoneOrEmail': phoneOrEmail,
-          'personId': personId,
-        });
-        return Either.goodRequest(true);
-      }
-
-      await service.postData(Constants.newUser, {
-        'phoneOrEmail': phoneOrEmail,
-        'businessId': businessId,
-      });
-
-      return Either.goodRequest(true);
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
-
-  @override
-  PostOtoFuture postOtp({required String phoneOrEmail}) async {
-    try {
-      await service.postData(Constants.sendOtp, {
-        'phoneOrEmail': phoneOrEmail,
-      });
-      return Either.goodRequest(true);
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
-
-  @override
-  PatchBiometricFuture patchBiometric({required bool biometric}) async {
-    try {
-      await service.patchData(
-        Constants.setBiometric,
-        {
-          'hasBiometric': biometric,
-        },
+  }) async =>
+      NewUser(
+        phoneOrEmail: phoneOrEmail,
+        personId: personId,
+        businessId: businessId,
       );
 
-      return Either.goodRequest(true);
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
-
   @override
-  GetFindUserFuture getFindUser({required String phoneOrEmail}) async {
-    try {
-      final response = await service.getData(
-        '${Constants.findUser}?phoneOrEmail=$phoneOrEmail',
+  PostOtoFuture postOtp({
+    required String phoneOrEmail,
+  }) async =>
+      Otp(
+        phoneOrEmail: phoneOrEmail,
       );
 
-      return Either.goodRequest(UserModel.fromJson(response.data));
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
+  @override
+  PatchBiometricFuture patchBiometric({
+    required bool biometric,
+  }) async =>
+      pBiometric(
+        biometric: biometric,
+      );
 
   @override
-  PostVerifyPasswordFuture postVerifyPassword({required String password}) async {
-    try {
-      await service.postData(Constants.passwordVerify, {
-        'password': password,
-      });
+  GetFindUserFuture getFindUser({
+    required String phoneOrEmail,
+  }) async =>
+      FindUser(
+        phoneOrEmail: phoneOrEmail,
+      );
 
-      return Either.goodRequest(true);
-    } on DioException catch (e) {
-      HttpRequestFailure error = HttpRequestFailure.server;
-      if (e.response?.statusCode == 404) error = HttpRequestFailure.notFound;
-      if (e.response?.statusCode == 400) error = HttpRequestFailure.badRequest;
-      if (e.response?.statusCode == 401) error = HttpRequestFailure.unauthorized;
-
-      return Either.badRequest(Failure(
-        failure: error,
-        message: e.response != null ? jsonEncode(e.response!.data) : "Not data",
-      ));
-    } on SocketException {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.network,
-        message: "Error de conexión",
-      ));
-    } catch (_) {
-      return Either.badRequest(Failure(
-        failure: HttpRequestFailure.local,
-        message: "Error local",
-      ));
-    }
-  }
+  @override
+  PostVerifyPasswordFuture postVerifyPassword({
+    required String password,
+  }) async =>
+      VerifyPassword(
+        password: password,
+      );
 }
