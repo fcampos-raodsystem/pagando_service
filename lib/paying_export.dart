@@ -74,7 +74,7 @@ export 'package:paying_service/src/repository/checkout/products_repository.dart'
 export 'package:paying_service/src/repository/pagando/authentication/authentication_repository.dart';
 
 export 'package:paying_service/src/repository/pagando/bank_repository.dart';
-export 'package:paying_service/src/repository/pagando/charge_repository.dart';
+export 'package:paying_service/src/repository/pagando/charge/charge_repository.dart';
 export 'package:paying_service/src/repository/pagando/dashboard_repository.dart';
 export 'package:paying_service/src/repository/pagando/directory_repository.dart';
 export 'package:paying_service/src/repository/pagando/movement_repository.dart';

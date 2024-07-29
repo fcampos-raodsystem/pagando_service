@@ -59,7 +59,7 @@ class ChargeRepository {
       'bankCode': bankCode,
       'phoneNumber': phoneNumber,
       'amount': amount,
-      'concept': concept!,
+      'concept': concept ?? "",
       'dni': dni,
       'dniPrefix': dniPrefix,
     });
