@@ -102,6 +102,8 @@ class AuthenticationRepository implements UserSessionImplement, AuthenticationIm
         deviceModel: deviceModel,
         long: long,
         lat: lat,
+        password: password,
+        opt: opt,
       );
 
   @override
